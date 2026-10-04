@@ -76,7 +76,7 @@ And the three nouns:
 ## Install
 
 ```bash
-pi install /abs/path/to/pi-lead     # or `pi install npm:pi-lead` once published
+pi install npm:pi-lead              # or: pi install /abs/path/to/pi-lead
 pi list                     # confirm the package is installed
 ```
 
