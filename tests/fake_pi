@@ -1,0 +1,57 @@
+#!/bin/sh
+# Stub `pi` for the offline test harness: records argv + PI_LEAD_* env (+ PILEAD_SHIM_DIR, PATH, and the
+# git-related env the shim checks, as "git_env") as one JSON line in $FAKE_PI_LOG, reads any @file args,
+# optionally runs `git --version` through its PATH ($FAKE_PI_GIT set → "git": [rc, stderr]), optionally
+# writes a canned report, exits 0. No model, no network. The record also carries the working directory
+# ("cwd"). With -p in the argument list (a `pilead review` reviewer) four variables, each optional, act
+# in this order: $FAKE_PI_ACT (a script run with sh), $FAKE_PI_SLEEP (seconds), $FAKE_PI_STDOUT (a file
+# printed on stdout) and $FAKE_PI_EXIT (the exit code). With none of them set it behaves as before.
+if [ "$1" = "--list-models" ]; then
+  printf 'provider   model            context\n'
+  printf 'anthropic  claude-sonnet-5  1M\n'
+  printf 'deepseek   deepseek-flash   1M\n'
+  printf 'anthropic  claude-haiku-4-5  200K\n'
+  printf 'anthropic  claude-sonnet-4-6  1M\n'
+  printf 'anthropic  claude-sonnet-4-5-20250929  1M\n'
+  printf 'anthropic  claude-opus-5  1M\n'
+  printf 'anthropic  claude-fable-5  1M\n'
+  printf 'deepseek   deepseek-v4-pro   1M\n'
+  exit 0
+fi
+if [ -n "$FAKE_PI_LOG" ]; then
+  python3 - "$@" >> "$FAKE_PI_LOG" <<'PY'
+import json, os, subprocess, sys
+argv = sys.argv[1:]
+files = {}
+for a in argv:
+    if a.startswith("@"):
+        try:
+            files[a[1:]] = open(a[1:]).read()
+        except OSError:
+            files[a[1:]] = None
+env = {k: v for k, v in os.environ.items() if k.startswith("PI_LEAD_") or k == "PILEAD_SHIM_DIR"}
+GIT_ENV = {"PAGER", "EDITOR", "VISUAL", "SSH_ASKPASS", "PROMPT_COMMAND"}
+git_env = {k: v for k, v in os.environ.items() if k.startswith("GIT_") or k in GIT_ENV}
+rec = {"argv": argv, "env": env, "files": files, "path": os.environ.get("PATH", ""), "git_env": git_env,
+       "cwd": os.getcwd()}
+if os.environ.get("FAKE_PI_GIT"):
+    r = subprocess.run(["git", "--version"], capture_output=True, text=True)
+    rec["git"] = [r.returncode, r.stderr]
+print(json.dumps(rec))
+PY
+fi
+if [ -n "$PI_LEAD_FAKE_REPLY" ] && [ -n "$PI_LEAD_HOME" ] && [ -n "$PI_LEAD_SID" ]; then
+  d="$PI_LEAD_HOME/sessions/$PI_LEAD_SID"
+  mkdir -p "$d"
+  printf '%s\n' "$PI_LEAD_FAKE_REPLY" > "$d/report-0001.md"
+fi
+for a in "$@"; do
+  if [ "$a" = "-p" ]; then
+    if [ -n "$FAKE_PI_ACT" ]; then sh "$FAKE_PI_ACT"; fi
+    if [ -n "$FAKE_PI_SLEEP" ]; then sleep "$FAKE_PI_SLEEP"; fi
+    if [ -n "$FAKE_PI_STDOUT" ]; then cat "$FAKE_PI_STDOUT"; fi
+    if [ -n "$FAKE_PI_EXIT" ]; then exit "$FAKE_PI_EXIT"; fi
+    break
+  fi
+done
+exit 0

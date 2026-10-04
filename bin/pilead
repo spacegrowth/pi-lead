@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+"""pilead — lead/executor CLI for pi. Thin entry; the implementation lives in lib/pilead/."""
+import os
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, "lib"))
+
+from pilead.cli import main  # noqa: E402
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,59 @@
+{
+  "name": "pi-lead",
+  "version": "0.1.0",
+  "description": "Lead/executor pattern for pi on iTerm2 or tmux: a lead plans and reviews, executors work packets in their own tabs, stage (never commit), and report.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spacegrowth/pi-lead.git"
+  },
+  "homepage": "https://github.com/spacegrowth/pi-lead#readme",
+  "bugs": {
+    "url": "https://github.com/spacegrowth/pi-lead/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "pilead": "bin/pilead"
+  },
+  "keywords": [
+    "pi-package"
+  ],
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions/pi-lead.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "extensions",
+    "skills",
+    "vendor",
+    "docs",
+    "README.md",
+    "VENDOR.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "python3 -m pytest tests -q && node --test --import tsx tests/ts/*.test.ts",
+    "typecheck": "tsc --noEmit -p .",
+    "check": "npm test && npm run typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "tsx": "^4.19.0",
+    "typescript": "^7.0.2"
+  }
+}

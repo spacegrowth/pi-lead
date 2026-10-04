@@ -1,0 +1,12 @@
+usage: pilead whoami [-h] [--home HOME] [--json] [token]
+
+say who a session is: a lead and its executors, or an executor and its lead
+
+positional arguments:
+  token        an id, a lead's project or a unique id prefix (default $PI_LEAD_SID, else
+               $PI_SESSION_ID)
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --json

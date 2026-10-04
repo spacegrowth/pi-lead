@@ -1,0 +1,12 @@
+usage: pilead diff [-h] [--home HOME] [--open] [--all] sid
+
+render an executor's staged diff to sessions/<sid>/diff-NNNN.html
+
+positional arguments:
+  sid
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --open
+  --all        whole staged diff, not just files the report names

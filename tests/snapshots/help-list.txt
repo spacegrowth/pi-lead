@@ -1,0 +1,14 @@
+usage: pilead list [-h] [--home HOME] [--json] [--closed] [--lead SID] [--all] [--all-leads]
+                   [--plan]
+
+list leads and executor sessions
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --json
+  --closed     also list closed and dead sessions (the 15 most recently created)
+  --lead SID   only this lead's executors (and those with no lead)
+  --all        show every executor regardless of owner (the default without --lead)
+  --all-leads  also list ghost leads of other projects
+  --plan       after the executors, the plan of --lead (default: the calling lead)

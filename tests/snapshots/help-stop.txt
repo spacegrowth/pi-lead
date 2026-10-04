@@ -1,0 +1,10 @@
+usage: pilead stop [-h] [--home HOME] sid
+
+step down as lead: remove its record, route and usage cache (wakes are off)
+
+positional arguments:
+  sid          the lead's session id
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)

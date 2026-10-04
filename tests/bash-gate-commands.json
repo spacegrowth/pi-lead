@@ -1,0 +1,627 @@
+[
+  {
+    "command": "echo x > lib/new.py",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > lib/tracked.py",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cat > lib/tracked.py <<EOF\nline 0\nline 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\nline 13\nline 14\nline 15\nline 16\nline 17\nline 18\nline 19\nline 20\nline 21\nline 22\nline 23\nline 24\nline 25\nline 26\nline 27\nline 28\nline 29\nline 30\nline 31\nline 32\nline 33\nline 34\nline 35\nline 36\nline 37\nline 38\nline 39\nline 40\nEOF",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "cat > lib/tracked.py <<EOF\nline 0\nline 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\nline 13\nline 14\nline 15\nline 16\nline 17\nline 18\nline 19\nline 20\nline 21\nline 22\nline 23\nline 24\nline 25\nline 26\nline 27\nline 28\nline 29\nline 30\nline 31\nline 32\nline 33\nline 34\nline 35\nline 36\nline 37\nline 38\nline 39\nEOF",
+    "verdict": "log",
+    "mode": "deny"
+  },
+  {
+    "command": "ls -la",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "git status",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > untracked_dir/new.py",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > ../outside.txt",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > _staging/new.md",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > lib/003-packet.md",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > $OUT",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "sed -i s/a/b/ lib/*.py",
+    "verdict": "log",
+    "mode": "deny"
+  },
+  {
+    "command": "sed -i s/a/b/ lib/tracked.py",
+    "verdict": "log",
+    "mode": "deny"
+  },
+  {
+    "command": "make > /dev/null 2>&1",
+    "verdict": "log",
+    "mode": "deny"
+  },
+  {
+    "command": "echo 1 > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo '{}' >> ~/.pi-lead/ledger.jsonl",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo retain > ~/.pi-lead/leads/lead-1.route",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > ~/.pi-lead/leads/x.inbox.md",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cp lib/scratch.py lib/tracked.py",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cp lib/scratch.py bin/",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "python3 - <<PY\nopen('lib/gen.py', 'w').write('x')\nPY",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "python3 -c \"open('lib/tracked.py').read()\"",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "npm install",
+    "verdict": "log",
+    "mode": "deny"
+  },
+  {
+    "command": "pytest -q",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "git commit -m wip",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x | tee lib/new2.py",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "cat <<EOF | sort | tee lib/tracked.py\nline 0\nline 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\nline 13\nline 14\nline 15\nline 16\nline 17\nline 18\nline 19\nline 20\nline 21\nline 22\nline 23\nline 24\nline 25\nline 26\nline 27\nline 28\nline 29\nline 30\nline 31\nline 32\nline 33\nline 34\nline 35\nline 36\nline 37\nline 38\nline 39\nline 40\nEOF",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > lib/scratch.py",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > lib/new.py",
+    "verdict": "log",
+    "mode": "log"
+  },
+  {
+    "command": "echo 1 > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "cat > lib/tracked.py <<EOF\nline 0\nline 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\nline 13\nline 14\nline 15\nline 16\nline 17\nline 18\nline 19\nline 20\nline 21\nline 22\nline 23\nline 24\nline 25\nline 26\nline 27\nline 28\nline 29\nline 30\nline 31\nline 32\nline 33\nline 34\nline 35\nline 36\nline 37\nline 38\nline 39\nline 40\nEOF",
+    "verdict": "log",
+    "mode": "log"
+  },
+  {
+    "command": "ls",
+    "verdict": "allow",
+    "mode": "log"
+  },
+  {
+    "command": "echo x > lib/new.py",
+    "verdict": "allow",
+    "mode": "off"
+  },
+  {
+    "command": "echo 1 > ~/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "off"
+  },
+  {
+    "command": "npm install",
+    "verdict": "log",
+    "mode": "off"
+  },
+  {
+    "command": "echo x > lib/new.py",
+    "verdict": "log",
+    "mode": "Deny"
+  },
+  {
+    "command": "echo x > ~/.pi-lead/CONFIG.JSON",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x >> ~/.pi-lead/Ledger.JSONL",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo retain > ~/.pi-lead/LEADS/lead-1.ROUTE",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "touch ~/.pi-lead/leads/lead-1.route",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "touch ~/.pi-lead/leads/lead-1.route",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "truncate -s 0 ~/.pi-lead/ledger.jsonl",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "install -m 644 lib/tracked.py ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "ln -sf /tmp/elsewhere ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "rm -f ~/.pi-lead/ledger.jsonl",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "mv lib/scratch.py ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "cp lib/scratch.py ~/.pi-lead/leads/x.route",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "dd if=/dev/zero of=~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "rm ~/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "off"
+  },
+  {
+    "command": "cat ~/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "jq . ~/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "wc -l < ~/.pi-lead/ledger.jsonl",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cat ~/.pi-lead/config.json | jq .mode",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cat ~/.pi-lead/config.json > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "cat ~/.pi-lead/config.json <> ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "cat a && touch ~/.pi-lead/leads/s.route",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo 'x > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x >> ~/.pi-lead/LEDGER.jsonl\u0000",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "echo 'x > notes.txt",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "touch lib/new.py",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > $HOME/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > $HOME/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "echo x > ${HOME}/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > ${HOME}/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "echo x > $PI_LEAD_HOME/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo x > $PI_LEAD_HOME/config.json",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "cd ~/.pi-lead && echo x > config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "cd ~/.pi-lead && echo x > config.json",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "cd ~/.pi-lead/leads && touch s.route",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "cd ~/.pi-lead/leads && touch s.route",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "touch ~/.pi-lead/leads/*.route",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "touch ~/.pi-lead/leads/*.route",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "eval \"echo x > ~/.pi-lead/config.json\"",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "eval \"echo x > ~/.pi-lead/config.json\"",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "bash -c \"echo x > ~/.pi-lead/config.json\"",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "bash -c \"echo x > ~/.pi-lead/config.json\"",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "sh -c \"echo x > ~/.pi-lead/config.json\"",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "sh -c \"echo x > ~/.pi-lead/config.json\"",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "bash <<EOF\necho x > ~/.pi-lead/config.json\nEOF",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "bash <<EOF\necho x > ~/.pi-lead/config.json\nEOF",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "node -e \"require(\\\"fs\\\").writeFileSync(\\\"/Users/x/.pi-lead/config.json\\\",\\\"x\\\")\"",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "node -e \"require(\\\"fs\\\").writeFileSync(\\\"/Users/x/.pi-lead/config.json\\\",\\\"x\\\")\"",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "python3 -c \"open(\\\"/Users/x/.pi-lead/config.json\\\",\\\"w\\\").write(\\\"x\\\")\"",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "python3 -c \"open(\\\"/Users/x/.pi-lead/config.json\\\",\\\"w\\\").write(\\\"x\\\")\"",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "find ~/.pi-lead -name \"*.route\" -delete",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "find ~/.pi-lead -name \"*.route\" -delete",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "rm -rf ~/.pi-lead/leads",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "rm -rf ~/.pi-lead/leads",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "rm -rf ~/.pi-lead",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "rm -rf ~/.pi-lead",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "rm ~/.pi-lead/leads/lead-1.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "rm ~/.pi-lead/leads/lead-1.json",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "test -f ~/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "test -f ~/.pi-lead/config.json > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "[ -f ~/.pi-lead/config.json ]",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "[ -f ~/.pi-lead/config.json ] > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "echo ~/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "echo ~/.pi-lead/config.json > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "realpath ~/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "realpath ~/.pi-lead/config.json > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "readlink ~/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "readlink ~/.pi-lead/config.json > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "ls ~/.pi-lead",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cat ~/.pi-lead/ledger.jsonl | sort",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "grep x $HOME/.pi-lead/ledger.jsonl",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "awk \"BEGIN{print 1 > \\\"~/.pi-lead/config.json\\\"}\"",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "awk \"BEGIN{print 1 > \\\"~/.pi-lead/config.json\\\"}\"",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "gawk \"BEGIN{print 1 >> \\\"$HOME/.pi-lead/ledger.jsonl\\\"}\"",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "mawk \"BEGIN{print 1 > \\\"~/.pi-lead/leads/lead-1.route\\\"}\"",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "awk \"{print}\" ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "sed -n 1,5p ~/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "sed -n 1p $HOME/.pi-lead/config.json",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "sed -n /route/p ~/.pi-lead/ledger.jsonl | wc -l",
+    "verdict": "allow",
+    "mode": "log"
+  },
+  {
+    "command": "sed \"s/a/b/w ~/.pi-lead/config.json\" lib/tracked.py",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "sed \"s/a/b/w ~/.pi-lead/config.json\" lib/tracked.py",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "sed -n \"1W ~/.pi-lead/leads/lead-1.route\" lib/tracked.py",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "sed -i s/a/b/ ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "sed -n 1p ~/.pi-lead/config.json > ~/.pi-lead/config.json",
+    "verdict": "block",
+    "mode": "deny"
+  },
+  {
+    "command": "cd ~/.pi-lead && ls",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cd ~/.pi-lead && ls",
+    "verdict": "allow",
+    "mode": "log"
+  },
+  {
+    "command": "pushd ~/.pi-lead/leads && ls -la",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cd ~/.pi-lead",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cd ~/.pi-lead && sed -n 1p config.json",
+    "verdict": "allow",
+    "mode": "deny"
+  },
+  {
+    "command": "cd ~/.pi-lead && sed -i s/a/b/ config.json",
+    "verdict": "block",
+    "mode": "log"
+  },
+  {
+    "command": "pushd ~/.pi-lead/leads && rm -f lead-1.json",
+    "verdict": "block",
+    "mode": "deny"
+  }
+]

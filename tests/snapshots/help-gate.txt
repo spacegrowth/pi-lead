@@ -1,0 +1,11 @@
+usage: pilead gate [-h] [--home HOME] [--session SESSION] [--cwd CWD] [--record] [--json]
+
+say what the lead's bash write gate makes of the command on stdin (read-only)
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --home HOME        state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --session SESSION  the lead's session id (default $PI_LEAD_SID, else $PI_SESSION_ID)
+  --cwd CWD          the directory the command runs in (default the current directory)
+  --record           append the ledger event (for the extension)
+  --json             print the whole decision as one JSON line

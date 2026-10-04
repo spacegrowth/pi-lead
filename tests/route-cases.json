@@ -1,0 +1,14 @@
+[
+  {"name": "a plain reason", "registered": true, "sid": "lead-route-1", "reason": "schema bump the lead owns",
+   "written": true, "event": true, "file_text": "2026-01-01T00:00:00.123Z schema bump the lead owns\n"},
+  {"name": "spaces at both ends", "registered": true, "sid": "lead-route-1", "reason": "   padded reason  ",
+   "written": true, "event": true, "file_text": "2026-01-01T00:00:00.123Z padded reason\n"},
+  {"name": "an empty reason", "registered": true, "sid": "lead-route-1", "reason": "",
+   "written": false, "event": false, "file_text": null},
+  {"name": "a reason of only spaces", "registered": true, "sid": "lead-route-1", "reason": "    ",
+   "written": false, "event": false, "file_text": null},
+  {"name": "a lead that is not registered", "registered": false, "sid": "lead-route-1", "reason": "a reason",
+   "written": false, "event": false, "file_text": null},
+  {"name": "an id that is not usable", "registered": true, "sid": "../../x", "reason": "a reason",
+   "written": false, "event": false, "file_text": null}
+]

@@ -1,0 +1,22 @@
+usage: pilead verify [-h] [--home HOME] [--packet PACKET] [--rerun] [--for-autocommit] [--in-plan]
+                     [--diff-reviewed] [--findings FINDINGS]
+                     sid
+
+machine-check an executor's report against its staged diff
+
+positional arguments:
+  sid
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --home HOME          state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --packet PACKET
+  --rerun              also re-run the report's declared test commands in its worktree — pytest,
+                       or exactly npm test, npm run check or node --test (argv only, never a
+                       shell, the git shim in force, 600s each) — and compare the counts; anything
+                       else is refused and named. A re-run executes code from the worktree. With
+                       --for-autocommit, clearance then also needs the re-run to match
+  --for-autocommit
+  --in-plan
+  --diff-reviewed
+  --findings FINDINGS

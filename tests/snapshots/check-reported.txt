@@ -1,0 +1,7 @@
+reported
+{HOME}/sessions/alpha-120000/report-0001.md
+Alpha did the thing; 3 tests, suite green, staged.
+Status: clean
+Risk flags: none
+UNVERIFIED: none
+Changed: lib/x.py

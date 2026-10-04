@@ -1,0 +1,13 @@
+usage: pilead status [-h] [--home HOME] [--statusline] [--ctx-tokens N] [--ctx-window N] [sid]
+
+print one read-only status line for a lead or an executor
+
+positional arguments:
+  sid             default $PI_LEAD_SID, else $PI_SESSION_ID
+
+optional arguments:
+  -h, --help      show this help message and exit
+  --home HOME     state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --statusline    the shorter line pi's footer shows (reads no session log)
+  --ctx-tokens N  with --statusline: the lead's context now, in tokens
+  --ctx-window N  with --statusline: the lead's context window, in tokens

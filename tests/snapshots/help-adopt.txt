@@ -1,0 +1,13 @@
+usage: pilead adopt [-h] [--home HOME] [--from LEAD_SID] [--force] [SID ...]
+
+make the calling lead the owner of executor sessions, so their reports wake it
+
+positional arguments:
+  SID              the sessions to adopt
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --home HOME      state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --from LEAD_SID  every session whose meta.json names this lead (closed and dead ones included)
+  --force          adopt also a session owned by a lead that is live, unreachable or cannot be
+                   read

@@ -1,0 +1,10 @@
+usage: pilead lineup [-h] [--home HOME] [--session SID] [--json]
+
+say which model classes this pi offers and where the lead sits
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --home HOME    state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --session SID  the lead's session id (default $PI_LEAD_SID, else $PI_SESSION_ID when it is a
+                 registered lead)
+  --json

@@ -1,0 +1,10 @@
+usage: pilead tidy [-h] [--home HOME] [--dry-run] [--quiet] [--lead SID]
+
+put every lead's tabs in order: the lead's tab, then its executors
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --dry-run    show the order and what would move; change nothing
+  --quiet      print nothing on success, the reason otherwise
+  --lead SID   the lead that asks (for the ledger event; default the caller)

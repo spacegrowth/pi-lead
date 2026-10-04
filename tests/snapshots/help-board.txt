@@ -1,0 +1,14 @@
+usage: pilead board [-h] [--home HOME] [--open] [--out PATH] [--lead SID] [--json]
+                    [--live [on|off]]
+
+render <home>/board.html from every lead and session
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --home HOME      state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --open           open the page afterwards
+  --out PATH       write the page to PATH (its directory is made), not <home>/board.html
+  --lead SID       only this lead's executors (and those with no lead)
+  --json           print the data the page is drawn from as JSON; write no page and no data file
+  --live [on|off]  on (also with no value): a page that reloads itself, and a data file beside it
+                   that later verbs keep rewritten; off: remove the data file

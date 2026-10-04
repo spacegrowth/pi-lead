@@ -1,0 +1,102 @@
+[
+ {
+  "name": "a title heading",
+  "report": "# Wake text works\n\nStatus: clean\n",
+  "brief": "Wake text works"
+ },
+ {
+  "name": "a plain first sentence",
+  "report": "Split-pane layout works behind a config flag; suite green, staged.\n\nStatus: clean\n",
+  "brief": "Split-pane layout works behind a config flag; suite green, staged."
+ },
+ {
+  "name": "blank lines first, runs of white space",
+  "report": "\n\n   \n## Heading  with   spaces\tand tabs\nbody\n",
+  "brief": "Heading with spaces and tabs"
+ },
+ {
+  "name": "hashes only line is the first line",
+  "report": "###\nnext line\n",
+  "brief": ""
+ },
+ {
+  "name": "hashes and spaces stripped, not others",
+  "report": "# # nested #tag\n",
+  "brief": "nested #tag"
+ },
+ {
+  "name": "no space after the hash",
+  "report": "#Title\n",
+  "brief": "Title"
+ },
+ {
+  "name": "crlf line ends",
+  "report": "First line\r\nSecond line\r\n",
+  "brief": "First line"
+ },
+ {
+  "name": "cr only line ends",
+  "report": "First\rSecond\r",
+  "brief": "First"
+ },
+ {
+  "name": "vertical tab ends a line",
+  "report": "one\u000btwo\n",
+  "brief": "one"
+ },
+ {
+  "name": "line separator ends a line",
+  "report": "one two\n",
+  "brief": "one"
+ },
+ {
+  "name": "file separator ends a line",
+  "report": "one\u001ctwo\n",
+  "brief": "one"
+ },
+ {
+  "name": "unit separator is white space",
+  "report": "a\u001fb\n",
+  "brief": "a b"
+ },
+ {
+  "name": "no-break spaces are white space",
+  "report": "a  b c\n",
+  "brief": "a b c"
+ },
+ {
+  "name": "a line of only no-break spaces is empty",
+  "report": "  　\nreal\n",
+  "brief": "real"
+ },
+ {
+  "name": "empty report",
+  "report": "",
+  "brief": ""
+ },
+ {
+  "name": "only white space",
+  "report": "  \n\t\n \n",
+  "brief": ""
+ },
+ {
+  "name": "inline markup is kept",
+  "report": "**Fixed** the `wake` — 3 files\n",
+  "brief": "**Fixed** the `wake` — 3 files"
+ },
+ {
+  "name": "cut to 200 characters",
+  "report": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n",
+  "brief": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+ },
+ {
+  "name": "cut counts characters, not bytes",
+  "report": "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦\n",
+  "brief": "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦🚦"
+ },
+ {
+  "name": "exactly 200 characters",
+  "report": "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\nz\n",
+  "brief": "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+ }
+]

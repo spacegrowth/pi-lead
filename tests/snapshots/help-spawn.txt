@@ -1,0 +1,31 @@
+usage: pilead spawn [-h] [--home HOME] [--model MODEL] [--model-override REASON] [--effort LEVEL]
+                    [--scope SCOPE] [--keep] [--seed PATH_OR_SID] --lead LEAD [--name NAME]
+                    [--pane | --tab]
+                    worktree topic packet
+
+open an executor tab seeded with a packet
+
+positional arguments:
+  worktree
+  topic
+  packet
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --home HOME           state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --model MODEL         tier alias (haiku|sonnet|opus|fable|dsflash|dspro) or provider/id
+                        (default: config executor_default_model, else sonnet)
+  --model-override REASON
+                        launch a model above config executor_model_ceiling (default opus); the
+                        reason is ledgered
+  --effort LEVEL        pi thinking level: off|minimal|low|medium|high|xhigh|max (default: the
+                        packet's EFFORT: line, else config executor_default_effort, else high)
+  --scope SCOPE         what this executor covers, shown by `pilead list` (default: the topic)
+  --keep                pin the session at birth (as `pilead keep`)
+  --seed PATH_OR_SID    inherit a retired session's successor seed: a seed file, or the retired
+                        session's id (`pilead retire`)
+  --lead LEAD
+  --name NAME           tab label (default '[Exec] <sid>')
+  --pane                iTerm and tmux: split a pane in the lead's own window (a tab if the lead
+                        can't be found)
+  --tab                 a new tab right of the lead's tab (default)

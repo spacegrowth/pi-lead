@@ -1,0 +1,15 @@
+usage: pilead tier [-h] [--home HOME] [--session SID] [--packet PATH] [--json]
+                   {auto,manual,lead,status,ask}
+
+set who chooses an executor's model without --model, or show it, or ask
+
+positional arguments:
+  {auto,manual,lead,status,ask}
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --home HOME           state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --session SID         the lead's session id (default $PI_LEAD_SID, else $PI_SESSION_ID)
+  --packet PATH         ask: the packet the question is about (its lint picks the recommended
+                        class)
+  --json                ask: print the question as JSON

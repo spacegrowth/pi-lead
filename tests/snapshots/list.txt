@@ -1,0 +1,12 @@
+LEADS
+PROJECT  SESSION  MODEL  TERM  LIVE   CTX  MB  LAST ACTIVE  AUTO  TIER  WAKE  VER
+proj     lead-1   -      ?     ghost  -    -   -            -     auto  off   ?
+  ⚠ LIVE=ghost: proj (lead-1) — no tab and not active in the last 15 min. If that lead is still running, `pilead lead-start <sid> --project <name>` in its own tab re-registers it.
+  ⚠ WAKE=off: proj — registered, but no pi session with the pi-lead extension is watching the inbox
+
+EXECUTORS
+SESSION       STATUS    TOPIC              SCOPE  PROJECT  MODEL              PKT   CTX  TOKENS  EFFORT  REPORTED
+alpha-120000  reported  alpha              -      proj     claude-sonnet-5    0001  -    -       -       yes
+beta-130000   busy      beta-longer-topic  -      proj     deepseek-v4-flash  0012  -    -       -       no
+  CTX = live/window (live: the context of the last completed request on the conversation's current branch; window from pi's model list, ! = a request was larger than that window); TOKENS = prompt/output billed so far, then the cache hit rate
+  🚦 1 report(s) not yet handed to their lead: alpha-120000 (packet 0001) — read with pilead check <sid>; the wake is tried again, do not wait for it.

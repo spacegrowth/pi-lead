@@ -1,0 +1,9 @@
+usage: pilead auto-close [-h] [--home HOME] [--lead SID] [--dry-run]
+
+park this lead's finished executors: close (retire when heavy) the seen, landed or idle ones
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --lead SID   the lead whose executors to sweep (default: the calling lead)
+  --dry-run    print what would be parked; change nothing

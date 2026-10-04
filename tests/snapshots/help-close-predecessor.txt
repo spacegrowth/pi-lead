@@ -1,0 +1,7 @@
+usage: pilead close-predecessor [-h] [--home HOME]
+
+close the outgoing lead's tab recorded by pilead handoff (by its handle only; ask the human first)
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)

@@ -1,0 +1,14 @@
+usage: pilead check [-h] [--home HOME] [--all] [--json] [--refs-only] [--wake] [sid]
+
+print an executor's status (and its TL;DR when reported)
+
+positional arguments:
+  sid
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --all        check every session that is not closed or dead, in sid order
+  --json       print only JSON: one object per session checked
+  --refs-only  print only the one-line refs result and exit 0
+  --wake       with --refs-only: a second line of JSON facts (diff size, landing)

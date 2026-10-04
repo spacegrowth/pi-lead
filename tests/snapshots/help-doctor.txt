@@ -1,0 +1,11 @@
+usage: pilead doctor [-h] [--home HOME] [--offline] [--quick] [--strict] [--json]
+
+check that this machine and state dir are fit to run pi-lead (read-only)
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --offline    skip the checks that start pi
+  --quick      skip the slower checks (the ones that wait for pi's list of commands)
+  --strict     a WARN also counts as a FAIL for the exit code
+  --json

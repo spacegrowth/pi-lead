@@ -1,0 +1,10 @@
+usage: pilead focus [-h] [--home HOME] name
+
+bring an executor's or a lead's iTerm2 tab to the front
+
+positional arguments:
+  name         an executor's sid, a lead's sid, or a lead's project
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)

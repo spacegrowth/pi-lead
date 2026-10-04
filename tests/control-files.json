@@ -1,0 +1,90 @@
+[
+  {
+    "path": "config.json",
+    "kind": "settings"
+  },
+  {
+    "path": "ledger.jsonl",
+    "kind": "ledger"
+  },
+  {
+    "path": "leads/lead-1.route",
+    "kind": "grace file"
+  },
+  {
+    "path": "leads/lead-1.json",
+    "kind": "lead record"
+  },
+  {
+    "path": "leads/a.b.route",
+    "kind": "grace file"
+  },
+  {
+    "path": "leads/x.json",
+    "kind": "lead record"
+  },
+  {
+    "path": "leads/x.inbox.md",
+    "kind": null
+  },
+  {
+    "path": "config.json.bak",
+    "kind": null
+  },
+  {
+    "path": "sessions/s/config.json",
+    "kind": null
+  },
+  {
+    "path": "ledger.jsonl.1",
+    "kind": null
+  },
+  {
+    "path": "/tmp/pilead-elsewhere/config.json",
+    "kind": null
+  },
+  {
+    "path": "CONFIG.JSON",
+    "kind": "settings"
+  },
+  {
+    "path": "Ledger.JSONL",
+    "kind": "ledger"
+  },
+  {
+    "path": "LEADS/X.ROUTE",
+    "kind": "grace file"
+  },
+  {
+    "path": "Leads/X.Json",
+    "kind": "lead record"
+  },
+  {
+    "path": "leads/sub/x.route",
+    "kind": null
+  },
+  {
+    "path": "leads/x.json.bak",
+    "kind": null
+  },
+  {
+    "path": "leads.json",
+    "kind": null
+  },
+  {
+    "path": "leads/x.route.bak",
+    "kind": null
+  },
+  {
+    "path": "notes/lead-1.json",
+    "kind": null
+  },
+  {
+    "path": "sessions/s/leads/x.route",
+    "kind": null
+  },
+  {
+    "path": "leads/x.usage.json",
+    "kind": "lead record"
+  }
+]

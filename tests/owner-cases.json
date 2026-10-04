@@ -1,0 +1,550 @@
+[
+  {
+    "name": "owned",
+    "records": {
+      "L1": {
+        "json": {
+          "sid": "L1",
+          "project": "p"
+        }
+      }
+    },
+    "notes": {},
+    "lead": "L1",
+    "state": "owned",
+    "owner_lead": "L1",
+    "resolve": [
+      "L1",
+      "owned"
+    ],
+    "resolved": "L1"
+  },
+  {
+    "name": "orphan",
+    "records": {},
+    "notes": {},
+    "lead": "L-gone",
+    "state": "orphan",
+    "owner_lead": "L-gone",
+    "resolve": [
+      "L-gone",
+      "orphan"
+    ],
+    "resolved": "L-gone"
+  },
+  {
+    "name": "unowned, no key",
+    "records": {},
+    "notes": {},
+    "state": "unowned",
+    "owner_lead": null,
+    "resolved": null
+  },
+  {
+    "name": "unowned, empty",
+    "records": {},
+    "notes": {},
+    "lead": "",
+    "state": "unowned",
+    "owner_lead": null,
+    "resolved": null
+  },
+  {
+    "name": "unowned, null",
+    "records": {},
+    "notes": {},
+    "lead": null,
+    "state": "unowned",
+    "owner_lead": null,
+    "resolved": null
+  },
+  {
+    "name": "record not JSON",
+    "records": {
+      "L1": {
+        "raw": "{not json"
+      }
+    },
+    "notes": {},
+    "lead": "L1",
+    "state": "unknown",
+    "owner_lead": "L1",
+    "resolve": [
+      "L1",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "record not an object",
+    "records": {
+      "L1": {
+        "json": [
+          1
+        ]
+      }
+    },
+    "notes": {},
+    "lead": "L1",
+    "state": "unknown",
+    "owner_lead": "L1",
+    "resolve": [
+      "L1",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "record is a directory",
+    "records": {
+      "L1": {
+        "dir": true
+      }
+    },
+    "notes": {},
+    "lead": "L1",
+    "state": "unknown",
+    "owner_lead": "L1",
+    "resolve": [
+      "L1",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "named id not usable",
+    "records": {},
+    "notes": {},
+    "lead": "../x",
+    "state": "unknown",
+    "owner_lead": "../x",
+    "resolve": [
+      "../x",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "named id not a text",
+    "records": {},
+    "notes": {},
+    "lead": 5,
+    "state": "unknown",
+    "owner_lead": 5,
+    "resolved": null
+  },
+  {
+    "name": "chain of two notes",
+    "records": {
+      "C": {
+        "json": {
+          "project": "p"
+        }
+      }
+    },
+    "notes": {
+      "A": {
+        "json": {
+          "from": "x",
+          "to": "B",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "B": {
+        "json": {
+          "from": "x",
+          "to": "C",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      }
+    },
+    "lead": "A",
+    "state": "owned",
+    "owner_lead": "C",
+    "resolve": [
+      "C",
+      "owned"
+    ],
+    "resolved": "C"
+  },
+  {
+    "name": "chain of eight notes",
+    "records": {
+      "n8": {
+        "json": {}
+      }
+    },
+    "notes": {
+      "n0": {
+        "json": {
+          "from": "x",
+          "to": "n1",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n1": {
+        "json": {
+          "from": "x",
+          "to": "n2",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n2": {
+        "json": {
+          "from": "x",
+          "to": "n3",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n3": {
+        "json": {
+          "from": "x",
+          "to": "n4",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n4": {
+        "json": {
+          "from": "x",
+          "to": "n5",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n5": {
+        "json": {
+          "from": "x",
+          "to": "n6",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n6": {
+        "json": {
+          "from": "x",
+          "to": "n7",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n7": {
+        "json": {
+          "from": "x",
+          "to": "n8",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      }
+    },
+    "lead": "n0",
+    "state": "owned",
+    "owner_lead": "n8",
+    "resolve": [
+      "n8",
+      "owned"
+    ],
+    "resolved": "n8"
+  },
+  {
+    "name": "chain of nine notes",
+    "records": {
+      "n9": {
+        "json": {}
+      }
+    },
+    "notes": {
+      "n0": {
+        "json": {
+          "from": "x",
+          "to": "n1",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n1": {
+        "json": {
+          "from": "x",
+          "to": "n2",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n2": {
+        "json": {
+          "from": "x",
+          "to": "n3",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n3": {
+        "json": {
+          "from": "x",
+          "to": "n4",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n4": {
+        "json": {
+          "from": "x",
+          "to": "n5",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n5": {
+        "json": {
+          "from": "x",
+          "to": "n6",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n6": {
+        "json": {
+          "from": "x",
+          "to": "n7",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n7": {
+        "json": {
+          "from": "x",
+          "to": "n8",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "n8": {
+        "json": {
+          "from": "x",
+          "to": "n9",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      }
+    },
+    "lead": "n0",
+    "state": "unknown",
+    "owner_lead": "n0",
+    "resolve": [
+      "n8",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "loop of two",
+    "records": {},
+    "notes": {
+      "A": {
+        "json": {
+          "from": "x",
+          "to": "B",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      },
+      "B": {
+        "json": {
+          "from": "x",
+          "to": "A",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      }
+    },
+    "lead": "A",
+    "state": "unknown",
+    "owner_lead": "A",
+    "resolve": [
+      "B",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "note not JSON",
+    "records": {},
+    "notes": {
+      "A": {
+        "raw": "nope"
+      }
+    },
+    "lead": "A",
+    "state": "unknown",
+    "owner_lead": "A",
+    "resolve": [
+      "A",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "note to ../x",
+    "records": {},
+    "notes": {
+      "A": {
+        "json": {
+          "from": "x",
+          "to": "../x",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      }
+    },
+    "lead": "A",
+    "state": "unknown",
+    "owner_lead": "A",
+    "resolve": [
+      "A",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "note to a number",
+    "records": {},
+    "notes": {
+      "A": {
+        "json": {
+          "to": 7
+        }
+      }
+    },
+    "lead": "A",
+    "state": "unknown",
+    "owner_lead": "A",
+    "resolve": [
+      "A",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "note that is not an object",
+    "records": {},
+    "notes": {
+      "A": {
+        "json": [
+          "B"
+        ]
+      }
+    },
+    "lead": "A",
+    "state": "unknown",
+    "owner_lead": "A",
+    "resolve": [
+      "A",
+      "unknown"
+    ],
+    "resolved": null
+  },
+  {
+    "name": "note to a lead gone too",
+    "records": {},
+    "notes": {
+      "A": {
+        "json": {
+          "from": "x",
+          "to": "B",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      }
+    },
+    "lead": "A",
+    "state": "orphan",
+    "owner_lead": "A",
+    "resolve": [
+      "B",
+      "orphan"
+    ],
+    "resolved": "B"
+  },
+  {
+    "name": "a record wins over a note",
+    "records": {
+      "A": {
+        "json": {}
+      }
+    },
+    "notes": {
+      "A": {
+        "json": {
+          "from": "x",
+          "to": "B",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      }
+    },
+    "lead": "A",
+    "state": "owned",
+    "owner_lead": "A",
+    "resolve": [
+      "A",
+      "owned"
+    ],
+    "resolved": "A"
+  },
+  {
+    "name": "note to a broken record",
+    "records": {
+      "B": {
+        "raw": ""
+      }
+    },
+    "notes": {
+      "A": {
+        "json": {
+          "from": "x",
+          "to": "B",
+          "project": "p",
+          "at": "2026-09-30T00:00:00Z",
+          "reason": "takeover"
+        }
+      }
+    },
+    "lead": "A",
+    "state": "unknown",
+    "owner_lead": "A",
+    "resolve": [
+      "B",
+      "unknown"
+    ],
+    "resolved": null
+  }
+]

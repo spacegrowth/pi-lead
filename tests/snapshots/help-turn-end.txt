@@ -1,0 +1,13 @@
+usage: pilead turn-end [-h] [--home HOME] [--session SID] [--cwd DIR] [--json] [--banner]
+                       [--dry-run]
+
+say what a lead should hear now that its turn has ended (the extension runs it)
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --home HOME    state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --session SID  the lead (default $PI_LEAD_SID, else $PI_SESSION_ID)
+  --cwd DIR      where the lead works (default: its record's cwd)
+  --json         print one JSON line: {lines, kinds, parked}
+  --banner       post a desktop banner when there is something to review
+  --dry-run      say what would be said and write nothing

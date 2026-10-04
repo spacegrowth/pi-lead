@@ -1,0 +1,15 @@
+usage: pilead lint [-h] [--home HOME] [--worktree WORKTREE] [--model MODEL] [--strict] [--json]
+                   packet
+
+check a packet file before sending it (advisory; --strict exits 1 on warnings)
+
+positional arguments:
+  packet
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --home HOME          state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --worktree WORKTREE  resolve the packet's relative file references against this directory
+  --model MODEL        the model text the executor would get (used as text only, never resolved)
+  --strict             exit 1 when any finding is a warn
+  --json

@@ -1,0 +1,15 @@
+usage: pilead handoff [-h] [--home HOME] [--project NAME] [--model MODEL] [--effort LEVEL] memo
+
+hand this lead's role to a fresh successor lead in a new tab, from a memo
+
+positional arguments:
+  memo            the memo for the successor: in flight, reviewed and committed, open questions,
+                  next steps
+
+optional arguments:
+  -h, --help      show this help message and exit
+  --home HOME     state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --project NAME  the successor's project (default this lead's)
+  --model MODEL   the successor's model, an alias or provider/id (default the model of this lead's
+                  last answer)
+  --effort LEVEL  pi thinking level for the successor

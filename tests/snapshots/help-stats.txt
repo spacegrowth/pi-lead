@@ -1,0 +1,10 @@
+usage: pilead stats [-h] [--home HOME] [--lead SID] [--since DAYS] [--json]
+
+per-packet rounds, verdicts, report status and tokens, by model
+
+optional arguments:
+  -h, --help    show this help message and exit
+  --home HOME   state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --lead SID    only this lead's executors (and those with no lead)
+  --since DAYS  only packets sent within this many days
+  --json

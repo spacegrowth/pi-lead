@@ -1,0 +1,13 @@
+usage: pilead escalate [-h] [--home HOME] [--packet N] [--json] [--dry-run] sid
+
+say where a report that finds no listener goes (the executor's extension runs it)
+
+positional arguments:
+  sid          the executor session
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --packet N   the packet whose report it is (default the current one)
+  --json       print the decision as one JSON line
+  --dry-run    say what would be done; write nothing

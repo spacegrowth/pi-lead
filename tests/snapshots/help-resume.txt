@@ -1,0 +1,13 @@
+usage: pilead resume [-h] [--home HOME] [--effort LEVEL] [--force] sid
+
+reopen a closed or dead executor, or a crashed lead, with its conversation
+
+positional arguments:
+  sid             the executor's (or the lead's) session id
+
+optional arguments:
+  -h, --help      show this help message and exit
+  --home HOME     state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --effort LEVEL  pi thinking level for the reopened session (an executor stores it)
+  --force         resume even when it looks alive, its tab is still open, or pi has no session log
+                  for it

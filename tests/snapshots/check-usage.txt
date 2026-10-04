@@ -1,0 +1,8 @@
+reported
+{HOME}/sessions/gamma-140000/report-0001.md
+Gamma did the thing; 3 tests, suite green, staged.
+Status: clean
+Risk flags: none
+UNVERIFIED: none
+Changed: lib/x.py
+tokens 210k/9.6k over 3 requests · ctx 130k/1M · approaching heavy

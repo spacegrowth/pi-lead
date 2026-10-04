@@ -1,0 +1,11 @@
+usage: pilead report [-h] [--home HOME] [--packet N] sid
+
+print an executor's whole report (pilead check prints its TL;DR)
+
+positional arguments:
+  sid
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --packet N   the packet whose report to print (default: the current one)

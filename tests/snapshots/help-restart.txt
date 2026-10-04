@@ -1,0 +1,19 @@
+usage: pilead restart [-h] [--home HOME] [--effort LEVEL] [--model MODEL]
+                      [--model-override REASON] [--name NAME] [--force]
+                      sid
+
+run an executor's current packet again as a new conversation (a successor)
+
+positional arguments:
+  sid                   the executor to restart
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --home HOME           state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --effort LEVEL        pi thinking level (default: the session's own)
+  --model MODEL         tier alias or provider/id (default: the session's own; a paused session's
+                        config executor_fallback_model when set)
+  --model-override REASON
+                        launch a model above config executor_model_ceiling; the reason is ledgered
+  --name NAME           the successor's session id (default: <sid>-r<N>)
+  --force               restart even when the session is alive and not stalled

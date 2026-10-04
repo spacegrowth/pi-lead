@@ -1,0 +1,12 @@
+usage: pilead retire [-h] [--home HOME] [--force] [--keep-tab] sid
+
+close an executor and write its successor seed (an index of its packets)
+
+positional arguments:
+  sid          the executor to retire
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --force      retire even when it is busy with no report (that packet is seeded as NO REPORT)
+  --keep-tab   leave its process and tab running (the tab is retitled `[closed] <sid>`)

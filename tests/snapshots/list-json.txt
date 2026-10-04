@@ -1,0 +1,61 @@
+{
+  "leads": [
+    {
+      "sid": "lead-1",
+      "project": "proj",
+      "live": "ghost",
+      "model": null,
+      "usage": null,
+      "ctx_window": null,
+      "heavy": false,
+      "last_active": null,
+      "wake": "off",
+      "waiting": 0,
+      "version": null
+    }
+  ],
+  "executors": [
+    {
+      "sid": "alpha-120000",
+      "lead": "lead-1",
+      "worktree": "/wt/alpha",
+      "topic": "alpha",
+      "model": "anthropic/claude-sonnet-5",
+      "status": "reported",
+      "created": "-",
+      "packets": 1,
+      "label": "[Exec] alpha-120000",
+      "layout": "tab",
+      "reported": true,
+      "project": "proj",
+      "usage": null,
+      "ctx_window": null,
+      "heavy": false,
+      "approaching": false,
+      "queued": 0,
+      "diff": null,
+      "orphan": false
+    },
+    {
+      "sid": "beta-130000",
+      "lead": "lead-1",
+      "worktree": "/wt/beta",
+      "topic": "beta-longer-topic",
+      "model": "deepseek/deepseek-v4-flash",
+      "status": "busy",
+      "created": "",
+      "packets": 12,
+      "label": "[Exec] beta-130000",
+      "layout": "pane",
+      "reported": false,
+      "project": "proj",
+      "usage": null,
+      "ctx_window": null,
+      "heavy": false,
+      "approaching": false,
+      "queued": 0,
+      "diff": null,
+      "orphan": false
+    }
+  ]
+}

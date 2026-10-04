@@ -1,0 +1,17 @@
+usage: pilead plan [-h] [--home HOME] [--session SID] [status|add|rm|done|next|bind] ...
+
+a lead's written plan: an ordered list of packets and where each stands
+
+positional arguments:
+  [status|add|rm|done|next|bind]
+    status              show the plan (the default)
+    add                 add a packet file to the plan
+    rm                  remove item N
+    done                mark item N done
+    bind                bind item N to an executor's packet by hand
+    next                print the command for the first queued item (sends nothing)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --home HOME           state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --session SID         the lead's session id (default $PI_LEAD_SID, else $PI_SESSION_ID)

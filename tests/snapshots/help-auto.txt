@@ -1,0 +1,11 @@
+usage: pilead auto [-h] [--home HOME] [--session SID] {on,off,status}
+
+turn a lead's autonomous posture on or off, or show it
+
+positional arguments:
+  {on,off,status}
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --home HOME      state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --session SID    the lead's session id (default $PI_LEAD_SID, else $PI_SESSION_ID)

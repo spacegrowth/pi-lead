@@ -1,0 +1,58 @@
+usage: pilead [-h] VERB ...
+
+Lead/executor CLI for pi (iTerm2).
+
+positional arguments:
+  VERB
+    lead-start       register a lead session and create its inbox (idempotent)
+    lineup           say which model classes this pi offers and where the lead sits
+    auto             turn a lead's autonomous posture on or off, or show it
+    tier             set who chooses an executor's model without --model, or show it, or ask
+    plan             a lead's written plan: an ordered list of packets and where each stands
+    lint             check a packet file before sending it (advisory; --strict exits 1 on
+                     warnings)
+    handoff          hand this lead's role to a fresh successor lead in a new tab, from a memo
+    close-predecessor
+                     close the outgoing lead's tab recorded by pilead handoff (by its handle only;
+                     ask the human first)
+    takeover         move a lead's registration, executors, wakes and plan to another session id
+    spawn            open an executor tab seeded with a packet
+    send             send a follow-up packet to an executor (relaunches it if closed or dead)
+    queue            show, cancel or deliver the packets queued with send --when-idle
+    resume           reopen a closed or dead executor, or a crashed lead, with its conversation
+    restart          run an executor's current packet again as a new conversation (a successor)
+    adopt            make the calling lead the owner of executor sessions, so their reports wake
+                     it
+    focus            bring an executor's or a lead's iTerm2 tab to the front
+    tidy             put every lead's tabs in order: the lead's tab, then its executors
+    whoami           say who a session is: a lead and its executors, or an executor and its lead
+    list             list leads and executor sessions
+    check            print an executor's status (and its TL;DR when reported)
+    report           print an executor's whole report (pilead check prints its TL;DR)
+    status           print one read-only status line for a lead or an executor
+    stats            per-packet rounds, verdicts, report status and tokens, by model
+    verify           machine-check an executor's report against its staged diff
+    review           review staged work with a separate headless pi on read-only tools (costs
+                     tokens)
+    refs             accept: make the refs as they are now the packet's baseline (after your
+                     commit)
+    diff             render an executor's staged diff to sessions/<sid>/diff-NNNN.html
+    board            render <home>/board.html from every lead and session
+    notify           post a desktop banner: a report is ready, or --test
+    turn-end         say what a lead should hear now that its turn has ended (the extension runs
+                     it)
+    gate             say what the lead's bash write gate makes of the command on stdin (read-only)
+    route            open a registered lead's edit-gate grace window, as /pilead:route retain does
+    escalate         say where a report that finds no listener goes (the executor's extension runs
+                     it)
+    close            close an executor's tab and mark it closed (files kept)
+    retire           close an executor and write its successor seed (an index of its packets)
+    stop             step down as lead: remove its record, route and usage cache (wakes are off)
+    keep             pin an executor so it is left alone (close refuses it, prune keeps it)
+    auto-close       park this lead's finished executors: close (retire when heavy) the seen,
+                     landed or idle ones
+    prune            delete the state of sessions that ended long ago (and ghost lead records)
+    doctor           check that this machine and state dir are fit to run pi-lead (read-only)
+
+optional arguments:
+  -h, --help         show this help message and exit

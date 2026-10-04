@@ -1,0 +1,24 @@
+usage: pilead review [-h] [--home HOME] [--packet PACKET] [--lead SID] [--model SPEC] [--fresh]
+                     [--no-rerun] [--timeout SECONDS] [--large] [--dry-run] [--json] [--why]
+                     sid
+
+review staged work with a separate headless pi on read-only tools (costs tokens)
+
+positional arguments:
+  sid
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --home HOME        state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --packet PACKET    the packet to review (default: the newest report)
+  --lead SID         the calling lead, when $PI_LEAD_SID does not name it
+  --model SPEC       the reviewer's model, an alias or provider/id (default: the lead's own model)
+  --fresh            start the reviewer without a copy of the lead's context
+  --no-rerun         do not re-run the report's declared test commands
+  --timeout SECONDS  stop the reviewer after this long, 60-7200 (default 1800)
+  --large            allow a staged diff of more than 1,500,000 bytes
+  --dry-run          print what would be started; start and write nothing
+  --json             print the result as one JSON object
+  --why              ask about the session's state instead (why it is stalled, what it is doing):
+                     an answer of at most 8 lines, no review, never the lead's context (timeout
+                     default 600)

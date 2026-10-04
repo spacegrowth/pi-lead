@@ -1,0 +1,14 @@
+usage: pilead close [-h] [--home HOME] [--supersede BY] [--keep-tab] [--self LEAD_SID] [sid]
+
+close an executor's tab and mark it closed (files kept)
+
+positional arguments:
+  sid              the executor to close
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --home HOME      state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --supersede BY   record what took over its work (a successor's sid, or a word such as successor-
+                   seed); shown as `superseded`, and `pilead send` refuses it
+  --keep-tab       leave its process and tab running (the tab is retitled `[closed] <sid>`)
+  --self LEAD_SID  step down as lead instead (the same as `pilead stop LEAD_SID`)

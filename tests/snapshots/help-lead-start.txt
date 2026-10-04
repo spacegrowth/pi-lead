@@ -1,0 +1,13 @@
+usage: pilead lead-start [-h] [--home HOME] --project PROJECT [--cwd CWD] [--no-rename] lead_sid
+
+register a lead session and create its inbox (idempotent)
+
+positional arguments:
+  lead_sid
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --home HOME        state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --project PROJECT
+  --cwd CWD
+  --no-rename        do not rename or colour the lead's own tab

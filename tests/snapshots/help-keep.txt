@@ -1,0 +1,11 @@
+usage: pilead keep [-h] [--home HOME] [--off] sid
+
+pin an executor so it is left alone (close refuses it, prune keeps it)
+
+positional arguments:
+  sid          the executor to pin
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --off        release the pin

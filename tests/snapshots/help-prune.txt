@@ -1,0 +1,12 @@
+usage: pilead prune [-h] [--home HOME] [--days N] [--dry-run] [--lead SID] [--all]
+
+delete the state of sessions that ended long ago (and ghost lead records)
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --home HOME  state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --days N     only what ended more than N days ago (default 7)
+  --dry-run    print what would be removed; change nothing
+  --lead SID   that lead's sessions, and the lead records of its project (default: the calling
+               lead)
+  --all        every session and lead record under home

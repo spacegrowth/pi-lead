@@ -1,0 +1,28 @@
+usage: pilead send [-h] [--home HOME] [--heavy-override REASON] [--when-idle] [--rotate]
+                   [--upgrade] [--name NAME] [--model MODEL] [--model-override REASON]
+                   sid packet
+
+send a follow-up packet to an executor (relaunches it if closed or dead)
+
+positional arguments:
+  sid
+  packet
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --home HOME           state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --heavy-override REASON
+                        send even though the session is heavy (its live context is at or above
+                        context_nudge_tokens); the reason goes to the ledger
+  --when-idle           queue the packet when the session has not finished its current packet (or
+                        packets are already queued for it); it is delivered, oldest first, after
+                        that packet. Show or cancel with pilead queue
+  --rotate              retire the session (pilead retire) and send this packet as packet 1 of a
+                        seeded successor over the same territory; no --heavy-override needed
+  --upgrade             as --rotate, with the successor one tier up (haiku → sonnet → opus →
+                        fable)
+  --name NAME           with --rotate/--upgrade: the successor's session id (default: <sid>-r<N>)
+  --model MODEL         with --rotate/--upgrade: the successor's model (tier alias or provider/id)
+  --model-override REASON
+                        with --rotate/--upgrade: launch a model above config
+                        executor_model_ceiling; the reason is ledgered

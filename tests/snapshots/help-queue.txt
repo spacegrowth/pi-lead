@@ -1,0 +1,19 @@
+usage: pilead queue [-h] [--home HOME] [--cancel ID|all] [--deliver]
+                    [--trigger {manual,check,settle}] [--json]
+                    sid
+
+show, cancel or deliver the packets queued with send --when-idle
+
+positional arguments:
+  sid
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --home HOME           state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --cancel ID|all       remove the queued packet with this id, or all of them (a packet being
+                        delivered is kept)
+  --deliver             deliver the oldest queued packet if the session has finished its current
+                        packet; with the trigger manual a closed or dead session is reopened
+  --trigger {manual,check,settle}
+                        with --deliver: what asks for the delivery (default manual)
+  --json                the queue as JSON

@@ -1,0 +1,12 @@
+usage: pilead route [-h] [--home HOME] [--session SID] {retain} reason
+
+open a registered lead's edit-gate grace window, as /pilead:route retain does
+
+positional arguments:
+  {retain}
+  reason         why this edit is lead work
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --home HOME    state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --session SID  the lead (default $PI_LEAD_SID, else $PI_SESSION_ID)

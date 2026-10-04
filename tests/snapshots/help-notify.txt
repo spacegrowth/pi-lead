@@ -1,0 +1,15 @@
+usage: pilead notify [-h] [--home HOME] [--executor SID] [--packet N] [--no-lead] [--test]
+                     [lead_sid]
+
+post a desktop banner: a report is ready, or --test
+
+positional arguments:
+  lead_sid        the lead whose banner it is (not with --no-lead)
+
+optional arguments:
+  -h, --help      show this help message and exit
+  --home HOME     state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --executor SID  the executor that reported
+  --packet N      the packet number its report answers
+  --no-lead       the banner of an executor whose lead is not listening (or has no record)
+  --test          post a test banner (ignores notify_on_wake)

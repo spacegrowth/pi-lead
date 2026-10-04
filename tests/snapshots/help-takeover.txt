@@ -1,0 +1,13 @@
+usage: pilead takeover [-h] [--home HOME] [--as NEW_SID] [--project NAME] [--force] old_sid
+
+move a lead's registration, executors, wakes and plan to another session id
+
+positional arguments:
+  old_sid         the lead whose role moves
+
+optional arguments:
+  -h, --help      show this help message and exit
+  --home HOME     state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --as NEW_SID    the session that becomes the lead (default $PI_LEAD_SID, else $PI_SESSION_ID)
+  --project NAME  the project of the new record (default the old lead's)
+  --force         take over a lead that may still be running

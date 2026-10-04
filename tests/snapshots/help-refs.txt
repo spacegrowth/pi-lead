@@ -1,0 +1,12 @@
+usage: pilead refs [-h] [--home HOME] [--reason REASON] {accept} sid
+
+accept: make the refs as they are now the packet's baseline (after your commit)
+
+positional arguments:
+  {accept}
+  sid
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --home HOME      state dir (default $PI_LEAD_HOME or ~/.pi-lead)
+  --reason REASON  why the refs moved (e.g. 'lead committed packet 0001')
