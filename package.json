@@ -44,7 +44,8 @@
     "docs",
     "README.md",
     "VENDOR.md",
-    "LICENSE"
+    "LICENSE",
+    "!**/__pycache__"
   ],
   "scripts": {
     "test": "python3 -m pytest tests -q && node --test --import tsx tests/ts/*.test.ts",
