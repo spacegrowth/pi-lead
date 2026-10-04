@@ -702,7 +702,7 @@ def test_context_row3_an_unread_command_says_so(env, cmd):
 
 
 def test_context_row4_readme_names_the_unseen_shapes_and_parsed_no():
-    text = (ROOT / "README.md").read_text()
+    text = (ROOT / "docs" / "REFERENCE.md").read_text()
     limits = text[text.index("Limits, in plain words"):]
     limits = limits[:limits.index("\n\n")]
     for shape in ("`truncate`", "`install`", "`ln -sf`", "`touch`", "`bash -c"):

@@ -1,4 +1,4 @@
-"""Every fenced `pilead <verb> …` command in README + skills names a verb in `bin/pilead --help`."""
+"""Every fenced `pilead <verb> …` command in README, docs + skills names a verb in `bin/pilead --help`."""
 import re
 import subprocess
 from pathlib import Path
@@ -17,7 +17,7 @@ def help_verbs():
 
 
 def doc_files():
-    return [ROOT / "README.md", ROOT / "docs" / "manual-checklist.md", *sorted((ROOT / "skills").glob("*/SKILL.md"))]
+    return [ROOT / "README.md", ROOT / "docs" / "REFERENCE.md", ROOT / "docs" / "smoke-check.md", ROOT / "docs" / "manual-checklist.md", *sorted((ROOT / "skills").glob("*/SKILL.md"))]
 
 
 def test_help_lists_verbs():
