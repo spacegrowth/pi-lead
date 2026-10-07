@@ -75,6 +75,8 @@ adapted (see below).
   matches `comm=` on macOS and `args=` with "ends with" on Linux; pi-lead wants an EXACT basename (`api` is not
   `pi`) and reads args on macOS too, because pi is a node program whose `comm` may be `node`. A node shim counts
   when its script path contains `pi-coding-agent` (relay: `claude-code`).
+- `iterm.py`, `terminal_app.py` (from relay cf43d14) — `spawn`'s AppleScript no longer starts with `activate`, so a
+  new executor opens behind whatever you're in instead of taking focus; `focus` still activates.
 - `backend.py` (b12) — `select(env=None, configured=None)` takes its inputs (relay reads `os.environ` and loads its
   config through `lead_guard`, which pi-lead does not have) and reads `PILEAD_TERMINAL` before `RELAY_TERMINAL`;
   `live_handle_from_env(bk=None, env=None)` reads `$TMUX_PANE` / `$ITERM_SESSION_ID` only (never
