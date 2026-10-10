@@ -417,6 +417,33 @@ def test_json_is_unfiltered_and_has_the_keys(tmp_path, capsys):
     assert ld["l-mine"]["usage"] is None and ld["l-mine"]["last_active"] is None
 
 
+def test_json_executor_rows_carry_packet_goal_and_outcome(tmp_path, capsys):
+    """A lead with one busy, one reported and one closed executor: the shape Cue parses over SSH."""
+    lead(tmp_path, "l-1", "proj", handle=f"w0t0p0:{LIVE_UUID}", started=iso(3600))
+    busy = session(tmp_path, "s-busy", lead_sid="l-1", topic="t-busy", packets=2)
+    (busy / "packet-0002.md").write_text("\n\nGOAL: build the thing\nmore\n")
+    rep = session(tmp_path, "s-rep", status="reported", lead_sid="l-1", topic="t-rep", report=True)
+    (rep / "report-0001.md").write_text("\nShipped it; suite green.\nStatus: clean\n")
+    (rep / "packet-0001.md").write_text("GOAL:" + "x" * 400 + "\n")
+    session(tmp_path, "s-closed", status="closed", lead_sid="l-1", topic="t-closed")
+    out = run(capsys, "--json")
+    d = json.loads(out)  # stdout is plain JSON and nothing else
+    assert set(d) == {"leads", "executors"}
+    [ld] = d["leads"]
+    assert ld["sid"] == "l-1" and ld["project"] == "proj" and ld["live"] == "live" and ld["started"] == iso(3600)
+    ex = {x["sid"]: x for x in d["executors"]}
+    assert set(ex) == {"s-busy", "s-rep", "s-closed"}
+    for x in ex.values():
+        for k in ("sid", "lead", "topic", "status", "packet", "model", "worktree", "goal", "outcome"):
+            assert k in x, k
+        assert x["lead"] == "l-1" and x["model"] == "anthropic/claude-sonnet-5"
+    assert ex["s-busy"]["status"] == "busy" and ex["s-busy"]["packet"] == 2 and ex["s-busy"]["topic"] == "t-busy"
+    assert ex["s-busy"]["goal"] == "build the thing" and ex["s-busy"]["outcome"] == ""
+    assert ex["s-rep"]["status"] == "reported" and ex["s-rep"]["outcome"] == "Shipped it; suite green."
+    assert ex["s-rep"]["goal"] == "x" * 300
+    assert ex["s-closed"]["status"] == "closed" and ex["s-closed"]["goal"] == "GOAL" and ex["s-closed"]["outcome"] == ""
+
+
 def test_list_caches_lead_usage_outside_the_lead_records(tmp_path, capsys):
     """`list` caches a lead's usage in usage/leads/<sid>.json; leads/ keeps only the lead's record."""
     lead(tmp_path, "lead-a", "pa", handle=f"w0t0p0:{LIVE_UUID}", cwd=tmp_path / "lc")

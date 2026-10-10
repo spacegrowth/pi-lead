@@ -321,13 +321,29 @@ def _owner_footnotes(home, rows):
     return out
 
 
+def _first_line(path, drop_goal=False):
+    """The first non-empty line of a file, stripped, "GOAL:" dropped when asked, at most 300 characters; "" when
+    the file is missing, unreadable or blank."""
+    try:
+        with open(path, encoding="utf-8", errors="replace") as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    if drop_goal and line[:5].upper() == "GOAL:":
+                        line = line[5:].strip()
+                    return line[:300]
+    except OSError:
+        pass
+    return ""
+
+
 def _json_payload(home, leads, sessions):
     lrows = []
     for ld in leads:
         if ld["broken"]:
             lrows.append({"sid": ld["sid"], "broken": True})
             continue
-        lrows.append({**ld["rec"], "live": ld["live"], "model": ld["model"], "usage": _public_usage(ld["usage"]),
+        lrows.append({**ld["rec"], "started": ld["rec"].get("started"), "live": ld["live"], "model": ld["model"], "usage": _public_usage(ld["usage"]),
                       "ctx_window": ld["window"], "heavy": ld["heavy"],
                       "last_active": status_mod.iso_utc(ld["last_active"]) if ld["last_active"] is not None else None,
                       "wake": ld["wake"][0], "waiting": ld["waiting"], "version": ld["ver"]})
@@ -337,7 +353,9 @@ def _json_payload(home, leads, sessions):
         if s["broken"]:
             erows.append({"sid": s["sid"], "broken": True})
             continue
-        erows.append({**s["meta"], "status": s["status"], "reported": s["reported"],
+        erows.append({**s["meta"], "status": s["status"], "reported": s["reported"], "packet": s["packet"],
+                      "goal": _first_line(state.packet_path(home, s["sid"], s["packet"]), drop_goal=True),
+                      "outcome": _first_line(state.report_path(home, s["sid"], s["packet"])),
                       "project": lead_project.get(s["meta"].get("lead")), "usage": _public_usage(s["usage"]),
                       "ctx_window": s["window"], "heavy": s["heavy"], "approaching": s["approaching"],
                       "queued": len(s["queue_items"]) if s["queue_items"] is not None else None,
