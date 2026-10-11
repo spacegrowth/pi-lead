@@ -359,6 +359,8 @@ def _json_payload(home, leads, sessions):
                       "project": lead_project.get(s["meta"].get("lead")), "usage": _public_usage(s["usage"]),
                       "ctx_window": s["window"], "heavy": s["heavy"], "approaching": s["approaching"],
                       "queued": len(s["queue_items"]) if s["queue_items"] is not None else None,
+                      # a tmux executor's own session name (`pilead-<sid>`); null for a split pane or another terminal
+                      "tmux_session": s["meta"].get("tmux_session"),
                       # the size of the staged diff, read only for a reported row (lib/pilead/wakefacts.py)
                       "diff": wakefacts.diff_size(s["meta"].get("worktree") or None)["text"]
                       if s["status"] == "reported" else None,

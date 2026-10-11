@@ -46,9 +46,9 @@ Replace `<sid>` with the id `pilead spawn` prints. Ask the lead to run any comma
 
 ## Under tmux, on a Mac
 
-12. **An executor opens in a new window next to its lead's.** Ask the lead to `Run: pilead spawn …` (any small
-    packet). A new tmux window appears right after the lead's, `placement=adjacent` is printed, and pi starts in
-    it. (full: item 65)
+12. **An executor opens in its own tmux session, and your terminal stays put.** Ask the lead to `Run: pilead spawn …`
+    (any small packet). A detached session `pilead-<sid>` appears (`tmux ls`), `placement=own session (pilead-<sid>)`
+    is printed, pi starts in it, and the terminal showing the lead does not move. (full: item 65)
 
 ## On Ubuntu, over SSH, in tmux
 

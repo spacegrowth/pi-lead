@@ -2021,7 +2021,7 @@ survives an iTerm restart). Without the API — module missing, API disabled, a 
 lead's tab gone — the spawn still succeeds: AppleScript appends the tab to the end of the lead's
 window (or the front window when the lead can't be found). The last line of `spawn` says which:
 `placement=adjacent` or `placement=end-of-bar (<reason>)`. In iTerm and tmux, `--pane` splits the lead's own tab
-instead (`placement=pane`); `--tab` is the default. Under tmux the pane is a side-by-side split of the lead's pane.
+instead (`placement=pane`); `--tab` is the default. Under tmux the pane is a side-by-side split of the lead's pane. Under tmux a `--tab` executor is never a window of the lead's session: it gets its own detached session `pilead-<sid>` (`placement=own session (<name>)`), so no attached terminal is switched to it; attach with `tmux attach -t pilead-<sid>` or `pilead focus`. `pilead list --json` reports it as `tmux_session`.
 
 ## tmux and Linux
 

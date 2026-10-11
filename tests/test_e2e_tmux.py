@@ -5,6 +5,7 @@ command here carries `-L <that name>`; the default server is never addressed. Sk
 (claude-relay 0.5.6 tests/test_e2e_tmux.py is the model; pi-lead's spawn types nothing after the launch line.)"""
 import json
 import os
+import pty
 import shutil
 import subprocess
 import sys
@@ -100,7 +101,7 @@ def test_tmux_backend_against_a_private_server(tmux_server, tmp_path):
     assert res["ok"] is True and res["reason"] == "ok", res
     handle = res["session_id"]
     assert handle.startswith("tmux:%") and idfile.read_text() == handle
-    assert res["placement"] == "end-of-bar (no lead tmux handle)"
+    assert res["placement"] == f"own session (pilead-{SID})" and res["tmux_session"] == f"pilead-{SID}"
     pane = handle[len("tmux:"):]
 
     assert _poll(pidfile.exists), _capture(pane)
@@ -139,3 +140,66 @@ def test_tmux_backend_against_a_private_server(tmux_server, tmp_path):
 
     assert tmux_backend.close_by_id(handle) is True
     assert _poll(lambda: tmux_backend.exists_by_id(handle) is False)
+    assert not tmux_backend._ok(tmux_backend._tmux(["has-session", "-t", f"=pilead-{SID}"]))  # the session went too
+
+
+def _clients():
+    out = tmux_backend._tmux(["list-clients", "-F", "#{client_session}|#{window_id}|#{pane_id}"]).stdout or ""
+    return [ln for ln in out.splitlines() if ln.strip()]
+
+
+def _sessions():
+    return sorted((tmux_backend._tmux(["list-sessions", "-F", "#{session_name}"]).stdout or "").split())
+
+
+def test_spawn_never_moves_an_attached_client_off_the_leads_session(tmux_server, tmp_path):
+    """The bug this guards: a spawn used to make the executor's window current, so a client attached to the LEAD's
+    session (a human's terminal) jumped to it. A real client (a pty running `tmux attach`) sits on the lead's session
+    of the PRIVATE server across a tab spawn, a pane spawn and a close; the default server is never addressed."""
+    lead_pane = tmux_backend._tmux(["display-message", "-p", "-t", "e2e", "#{pane_id}"]).stdout.strip()
+    lead_handle = tmux_backend.handle_for(lead_pane)
+    master, slave = pty.openpty()
+    client = subprocess.Popen(["tmux", "-L", tmux_server, "attach-session", "-t", "=e2e"], stdin=slave, stdout=slave,
+                              stderr=slave, env={**os.environ, "TERM": "xterm"}, start_new_session=True)
+    os.close(slave)
+    try:
+        assert _poll(lambda: len(_clients()) == 1), "the pty client never attached"
+        before = _clients()
+        assert before[0].startswith("e2e|")
+        windows_before = tmux_backend._tmux(["list-windows", "-t", "=e2e", "-F", "#{window_id}"]).stdout
+
+        def spawn(sid, layout):
+            sdir = tmp_path / "sessions" / sid
+            sdir.mkdir(parents=True)
+            packet = sdir / "packet-0001.md"
+            packet.write_text("p\n")
+            args = dict(session_id=sid, model="m", extension="/ext/pi-lead.ts", rules=str(packet),
+                        home=str(tmp_path / "h"), lead="lead-1", inbox=str(sdir / "inbox.md"))
+            return tmux_backend.spawn(str(tmp_path), str(packet), f"[Exec] {sid}", str(sdir / "pid"), args,
+                                      env_prefix="export PATH=/nonexistent:$PATH && ", lead_handle=lead_handle,
+                                      layout=layout)
+
+        tab = spawn("tabby-111111", "tab")
+        assert tab["ok"] is True and tab["tmux_session"] == "pilead-tabby-111111", tab
+        assert "pilead-tabby-111111" in _sessions()
+        assert _clients() == before                       # still on the lead's session, window and pane
+
+        pane_res = spawn("paney-222222", "pane")
+        assert pane_res["ok"] is True and pane_res["placement"] == "pane" and pane_res["tmux_session"] is None, pane_res
+        assert _clients() == before
+        assert _sessions() == ["e2e", "pilead-tabby-111111"]          # a split makes no session of its own
+        assert tmux_backend._tmux(["list-windows", "-t", "=e2e", "-F", "#{window_id}"]).stdout == windows_before
+        assert _display(lead_pane, "#{window_panes}") == "2"          # ... it is a pane beside the lead
+        assert tmux_backend.window_is_own(tab["session_id"]) is True
+        assert tmux_backend.window_is_own(pane_res["session_id"]) is False
+
+        # close: the tab's session goes; the split costs only its pane; the lead and its client are untouched
+        assert tmux_backend.close_by_id(tab["session_id"]) is True
+        assert tmux_backend.close_by_id(pane_res["session_id"]) is True
+        assert _poll(lambda: _sessions() == ["e2e"])
+        assert _display(lead_pane, "#{window_panes}") == "1"
+        assert _clients() == before
+    finally:
+        client.terminate()
+        client.wait(timeout=10)
+        os.close(master)

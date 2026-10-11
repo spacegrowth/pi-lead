@@ -37,6 +37,7 @@
       "heavy": false,
       "approaching": false,
       "queued": 0,
+      "tmux_session": null,
       "diff": null,
       "orphan": false
     },
@@ -61,6 +62,7 @@
       "heavy": false,
       "approaching": false,
       "queued": 0,
+      "tmux_session": null,
       "diff": null,
       "orphan": false
     }

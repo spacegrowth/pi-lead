@@ -87,5 +87,17 @@ adapted (see below).
   after the launch line (relay types `/rename <label>`); `rename_by_id` renames the window only and types nothing
   (relay also types `/rename`); the spawn result carries `placement`; new `window_is_own(handle)`; the socket is
   `$PILEAD_TMUX_SOCKET`, else `$RELAY_TMUX_SOCKET`.
+  **Own session per executor** — vendored, `_create_target` made the executor a `new-window -a` / `split-window` (no
+  `-d`), so tmux made it current and every client attached to the lead's session jumped to it, and a lead whose pane
+  could not be found got a window in whatever session was used last. Now: a tab executor is `new-session -d -s
+  pilead-<sid> -c <cwd> -n <label> -P -F '#{pane_id}'` (the sid is the session directory's name, '.'/':' mapped to
+  '-', a taken name gets `-2`, `-3`…; same design as claude-relay, implemented independently); `--pane` is
+  `split-window -h -d` off the lead's pane; a lead pane that cannot be found, or a failed `new-session`, never falls
+  back to "the current session" (the first gets an own session, the second fails the spawn with tmux's stderr).
+  Spawn issues no switch-client / select-window / select-pane; `close_by_id` kills the executor's own session
+  (`kill-session -t =<name>`, only when `pilead-…` holds that one pane) and only the pane of a split; `focus` still
+  switches a client, on the user's explicit `pilead focus` only. The spawn result gains `tmux_session`
+  (name, None for a split) and `placement` reads `own session (<name>)` instead of `adjacent`/`end-of-bar`;
+  `lib/pilead/launch.py` stores it in meta and `pilead list --json` reports it per executor (`tmux_session`).
 - `iterm_pyapi.py` — `create_adjacent_tab` returns `(handle, reason)` for every degrade path
   (missing module, timeout, stale handle, API refused); `try_create_adjacent_tab` wraps it.

@@ -92,6 +92,7 @@ def _launch(home, meta, packet, resume):
         raise PileadError(f"tab launch failed ({r.get('reason')}); nothing was started", 1)
     meta["backend"] = be.NAME
     meta["tab"] = r.get("session_id") or ""
+    meta["tmux_session"] = r.get("tmux_session")  # the tmux backend's own session for this executor (else None)
     state.save_meta(home, meta)
     return meta["tab"], r.get("placement") or f"end-of-bar ({be.NAME} backend has no tab placement)"
 

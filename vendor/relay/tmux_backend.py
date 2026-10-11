@@ -4,7 +4,7 @@ neither of those exists: a lead running `pi` inside tmux on a Linux box over SSH
 inside tmux on a Mac). Selected by $PILEAD_TERMINAL=tmux (or $RELAY_TERMINAL=tmux), config
 `terminal_app: tmux`, or automatically when $TMUX is set (see backend.py).
 
-Vendored from claude-relay d1cc0a7 `scripts/tmux_backend.py`, with two pi-lead adaptations:
+Vendored from claude-relay d1cc0a7 `scripts/tmux_backend.py`, with three pi-lead adaptations:
   1. pi-lead NEVER types into a running pi. `spawn` types the launch line into the fresh shell and
      nothing after it (relay then types `/rename <label>`); `rename_by_id` renames the tmux WINDOW
      only and types nothing (relay also types `/rename`). `spawn` keeps the vendored iTerm spawn's
@@ -13,6 +13,15 @@ Vendored from claude-relay d1cc0a7 `scripts/tmux_backend.py`, with two pi-lead a
      does. `window_is_own(handle)` is pi-lead's: callers use it so a split executor never recolours
      or renames its lead's window.
   2. The socket is $PILEAD_TMUX_SOCKET, else $RELAY_TMUX_SOCKET.
+  3. PLACEMENT NEVER MOVES A CLIENT. Vendored, the executor was a `new-window`/`split-window` made
+     current, so every client attached to the lead's session jumped to it (and a lead whose pane
+     could not be found got a window in whatever session was used last). Here each executor gets
+     its OWN detached session (`new-session -d -s pilead-<sid>`), a `--pane` executor is
+     `split-window -h -d` off the lead's pane, and a failed `new-session` fails the spawn with
+     tmux's error — no fallback into another session. Spawn issues no switch-client, select-window
+     or select-pane; `close` kills the executor's own session (only the pane for a split);
+     `focus` switches a client only on the user's explicit focus command. The spawn result carries
+     `tmux_session` (the session name; None for a split), which `pilead list --json` reports.
 
 ADDRESSING: by tmux PANE ID, never by title. The handle written to `iterm_id_file` (and stored as a
 session's `iterm-id` / a lead record's `iterm_handle`) is "tmux:%N" — `#{pane_id}`, unique for the
@@ -74,6 +83,7 @@ HANDLE_PREFIX = "tmux:"
 SID_EXPR = "$TMUX_PANE"   # the bootstrap guard's runtime pane id (see the module docstring)
 _PANE_RE = re.compile(r"^%\d+$")
 DEFAULT_TIMEOUT = 5
+SESSION_PREFIX = "pilead-"  # an executor's own tmux session is `pilead-<sid>` (see _session_name)
 
 
 def _tmux(args, timeout=DEFAULT_TIMEOUT):
@@ -153,45 +163,63 @@ def paint_tab(handle, rgb):
         return False
 
 
-def _create_target(cwd, label, lead_pane, layout):
-    """Create the executor's pane and return (pane_id|None, stderr, how) — `how` (pi-lead, for the
-    spawn's `placement`) names the attempt that worked: "split-window", "new-window -a",
-    "new-window", or None. Placement, each step degrading to a plain `new-window` on any lookup miss
-    — never failing the spawn over layout:
-      - layout="pane" + a resolvable lead pane → `split-window -h` off the lead's own pane (side by
-        side, like iTerm's `split vertically`);
-      - layout="tab" + a resolvable lead pane → `new-window -a` right after the lead's window;
-      - otherwise → `new-window` (tmux's current/most-recent session)."""
+def _session_name(pidfile):
+    """pi-lead: the executor's OWN tmux session name — `pilead-<sid>`, the sid being the name of the
+    session directory that holds `pidfile` (…/sessions/<sid>/pid). Tmux-safe: anything outside
+    [A-Za-z0-9_-] (notably '.' and ':', which tmux reads as target separators) becomes '-'."""
+    sid = os.path.basename(os.path.dirname(os.path.abspath(str(pidfile)))) if pidfile else ""
+    sid = re.sub(r"[^A-Za-z0-9_-]", "-", sid).strip("-")
+    return f"{SESSION_PREFIX}{sid or 'exec'}"
+
+
+def _unique_session(name):
+    """`name`, or `name-2`, `name-3`, … — the first no live session already holds (a kept `[closed]`
+    tab or a relaunch of the same sid must not collide). `has-session -t =<n>` is an exact match."""
+    cand, n = name, 1
+    while _ok(_tmux(["has-session", "-t", f"={cand}"])):
+        n += 1
+        cand = f"{name}-{n}"
+        if n > 99:
+            break
+    return cand
+
+
+def _create_target(cwd, label, lead_pane, layout, session_name):
+    """Create the executor's pane and return (pane_id|None, stderr, how, session|None) — `how` (for
+    the spawn's `placement`) is "split-window" or "new-session". NOTHING here ever changes what a
+    client is showing: no switch-client, no select-window/-pane, and both creating calls are
+    detached (`-d`).
+      - layout="pane" + a resolvable lead pane → `split-window -h -d` off the lead's own pane (side
+        by side, like iTerm's `split vertically`);
+      - otherwise → `new-session -d -s <session_name> -c <cwd>`: the executor gets its OWN detached
+        session. There is NO fallback into "the most recent session": if tmux refuses, the spawn
+        fails with tmux's error."""
     fmt = ["-P", "-F", "#{pane_id}"]
-    attempts = []
-    if lead_pane and layout == "pane":
-        attempts.append(("split-window",
-                         ["split-window", "-h", "-t", lead_pane] + fmt + ["-c", cwd]))
-    elif lead_pane:
-        win = _display(lead_pane, "#{window_id}")
-        if win:
-            attempts.append(("new-window -a",
-                             ["new-window", "-a", "-t", win] + fmt + ["-n", label, "-c", cwd]))
-    attempts.append(("new-window", ["new-window"] + fmt + ["-n", label, "-c", cwd]))
-    err = ""
-    for how, args in attempts:
-        r = _tmux(args, timeout=10)
-        pane = (r.stdout or "").strip()
-        if _ok(r) and _PANE_RE.match(pane):
-            return pane, "", how
-        err = (r.stderr or "").strip() or f"tmux {args[0]} returned {pane!r}"
-    return None, err, None
+    if lead_pane and layout == "pane" and _display(lead_pane, "#{pane_id}") == lead_pane:
+        args = ["split-window", "-h", "-d", "-t", lead_pane] + fmt + ["-c", cwd]
+        how, session = "split-window", None
+    else:
+        session = _unique_session(session_name)
+        args = ["new-session", "-d", "-s", session] + fmt + ["-n", label, "-c", cwd]
+        how = "new-session"
+    r = _tmux(args, timeout=10)
+    pane = (r.stdout or "").strip()
+    if _ok(r) and _PANE_RE.match(pane):
+        return pane, "", how, session
+    return None, (r.stderr or "").strip() or f"tmux {args[0]} returned {pane!r}", None, None
 
 
-def _placement(lead_pane, how):
+def _placement(lead_pane, how, layout="tab", session=None):
     """pi-lead: where spawn() put the new pane, in the iTerm spawn's words — `pane` (a split of the
-    lead's pane), `adjacent` (a `new-window -a` right after the lead's window), else `end-of-bar
-    (<why>)`."""
+    lead's pane) or `own session (<name>)` (a detached session of its own; a `--pane` request whose
+    lead pane could not be found says so)."""
     if how == "split-window":
         return "pane"
-    if how == "new-window -a":
-        return "adjacent"
-    return "end-of-bar (no lead tmux handle)" if not lead_pane else "end-of-bar (lead pane not found)"
+    if how == "new-session":
+        why = "" if layout != "pane" else (" — no lead tmux handle" if not lead_pane
+                                           else " — lead pane not found")
+        return f"own session ({session}{why})"
+    return "none (spawn failed)"
 
 
 def _fail(reason, err, session_id=None, placement=None):
@@ -204,13 +232,14 @@ def _fail(reason, err, session_id=None, placement=None):
 
 def spawn(cwd, packet_path, label, pidfile, pi_args, rename_delay=1.5, env_prefix="",
           iterm_id_file=None, tab_color=None, lead_handle=None, layout="tab", type_name=True):
-    """New tmux window (or split pane) running the standard launch chain (cd → pidfile via $$ →
+    """New tmux session of its own — detached, `pilead-<sid>` (or a `split-window -h -d` pane off the
+    lead's pane) — running the standard launch chain (cd → pidfile via $$ →
     exec pi), written to the per-session bootstrap FILE (§15b, `write_bootstrap_file`) with the
     `$TMUX_PANE` guard, then started by typing `sh <bootstrap> %N` into the pane BY ID (targeting
     choice (a), see the module docstring). Writes "tmux:%N" to `iterm_id_file` directly — the id is
     known from the create call, so the chain needs no `echo $TMUX_PANE` capture. Names the window
     `label` with automatic-rename off (the status bar stays pi-lead-owned) and paints it with
-    `tab_color` — both only when the pane has the window to itself. `layout`/`lead_handle`: see
+    `tab_color` — both only for a session of its own, never a split. `layout`/`lead_handle`: see
     `_create_target`. `env_prefix`: same meaning as iterm.spawn.
 
     pi-lead: the signature is the vendored iterm.spawn's, so every caller works unchanged. The launch
@@ -218,11 +247,12 @@ def spawn(cwd, packet_path, label, pidfile, pi_args, rename_delay=1.5, env_prefi
     no `/rename`, no sleep for them — pi-lead never types into a running pi). No colour escape is
     ever printed: `tab_color` becomes `window-status-style` through `paint_tab`.
 
-    Returns `{"ok", "reason", "session_id", "front_title", "placement"}` (front_title is always None
+    Returns `{"ok", "reason", "session_id", "front_title", "placement", "tmux_session"}` (front_title is always None
     — nothing is typed into a focus-dependent target here). Any tmux failure → `{"ok": False,
     "reason": "script-failed", …, "error": <stderr>}`; a pane that vanished between create and type
     → "target-gone" (nothing was launched). Never raises."""
     lead_pane = _pane(lead_handle)
+    session_name = _session_name(pidfile)
     try:
         base = build_pi_cmd(packet_path, **pi_args)
         # The iTerm spawn's chain minus its colour printf and id capture: `base` already starts
@@ -232,8 +262,8 @@ def spawn(cwd, packet_path, label, pidfile, pi_args, rename_delay=1.5, env_prefi
         boot_path = write_bootstrap_file(pidfile, cmd, sid_expr=SID_EXPR)
     except Exception as e:
         return _fail("script-failed", f"bootstrap: {e}", placement=_placement(lead_pane, None))
-    pane, err, how = _create_target(cwd, label, lead_pane, layout)
-    placement = _placement(lead_pane, how)
+    pane, err, how, session = _create_target(cwd, label, lead_pane, layout, session_name)
+    placement = _placement(lead_pane, how, layout, session)
     if not pane:
         return _fail("script-failed", err, placement=placement)
     handle = handle_for(pane)
@@ -243,11 +273,10 @@ def spawn(cwd, packet_path, label, pidfile, pi_args, rename_delay=1.5, env_prefi
                 f.write(handle)
         except OSError:
             pass
-    split = layout == "pane" and lead_pane is not None and \
-        _display(pane, "#{window_panes}") not in (None, "1")
-    if not split:
-        # A split pane shares the LEAD's window: renaming or recoloring "its" window would
-        # clobber the lead's own status-bar entry, so only a window of its own gets either.
+    if how == "new-session":
+        # The window is the new session's only one: name it `label` with automatic-rename off and
+        # paint it. (A split pane shares the LEAD's window: renaming or recoloring "its" window
+        # would clobber the lead's own status-bar entry, so a split gets neither.)
         _rename_window(pane, label)
         if tab_color:
             paint_tab(handle, tab_color)
@@ -262,7 +291,7 @@ def spawn(cwd, packet_path, label, pidfile, pi_args, rename_delay=1.5, env_prefi
                      placement=placement)
     # pi-lead: nothing is typed after the launch line (relay types `/rename <label>` here).
     return {"ok": True, "reason": "ok", "session_id": handle, "front_title": None,
-            "placement": placement}
+            "placement": placement, "tmux_session": session}
 
 
 def _rename_window(pane, name):
@@ -330,12 +359,27 @@ def rename_by_id(handle, new_name):
     return _rename_window(pane, new_name)
 
 
+def _own_session(pane):
+    """pi-lead: the name of the executor's OWN session when `pane` is the sole pane of a session
+    named `pilead-…` (what `spawn` creates), else None — a split pane lives in its lead's session,
+    which close must never kill."""
+    name = _display(pane, "#{session_name}")
+    if not name or not name.startswith(SESSION_PREFIX):
+        return None
+    r = _tmux(["list-panes", "-s", "-t", pane, "-F", "#{pane_id}"])
+    return name if _ok(r) and (r.stdout or "").split() == [pane] else None
+
+
 def close_by_id(handle):
-    """HANDLE-ONLY close: `kill-pane -t %N`. The caller kills the process first, as for every
-    backend. True iff tmux killed it."""
+    """HANDLE-ONLY close. An executor with a session of its own → `kill-session -t =<name>` (the
+    session goes with its only pane, so no empty session lingers); a split pane → `kill-pane -t %N`
+    only. The caller kills the process first, as for every backend. True iff tmux killed it."""
     pane = _pane(handle)
     if not pane:
         return False
+    own = _own_session(pane)
+    if own:
+        return _ok(_tmux(["kill-session", "-t", f"={own}"]))
     return _ok(_tmux(["kill-pane", "-t", pane]))
 
 
@@ -345,8 +389,9 @@ def close(label, handle=None, pid=None):
 
 
 def focus(label, handle=None, pid=None):
-    """Bring the pane to the front: switch the client to the pane's session when it is showing a
-    different one (best-effort — a detached server has no client), then `select-window` +
+    """Bring the pane to the front — ONLY ever called for the user's explicit focus command (spawn
+    and every other path never switch a client): switch the client to the pane's session when it is
+    showing a different one (best-effort — a detached server has no client), then `select-window` +
     `select-pane`. True iff the pane was selected."""
     pane = _pane(handle)
     if not pane:

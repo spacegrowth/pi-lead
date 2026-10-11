@@ -131,32 +131,61 @@ def _spawn(tmp_path, **kw):
 
 
 def _create(rec):
-    return [c for c in rec.calls if c[0] in ("new-window", "split-window")]
+    return [c for c in rec.calls if c[0] in ("new-window", "new-session", "split-window")]
 
 
-def test_spawn_new_window_without_lead(tmp_path, rec):
-    rec.answers.append((lambda a: a[0] == "new-window", (0, "%7\n")))
+NEW_SESSION = lambda a: a[0] == "new-session"  # noqa: E731
+NO_SESSION = (lambda a: a[0] == "has-session", (1, ""))  # no tmux session holds the name yet
+# verbs that would move a client (or the current window/pane) — spawn must issue NONE of them
+MOVERS = {"switch-client", "select-window", "select-pane", "new-window", "attach-session", "link-window"}
+
+
+def test_spawn_gives_the_executor_its_own_detached_session(tmp_path, rec):
+    rec.answers += [NO_SESSION, (NEW_SESSION, (0, "%7\n"))]
     res, sdir = _spawn(tmp_path, tab_color=(1, 2, 3))
     assert res["ok"] is True and res["reason"] == "ok" and res["session_id"] == "tmux:%7"
-    assert res["placement"] == "end-of-bar (no lead tmux handle)"
+    assert res["tmux_session"] == "pilead-topic-101010"
+    assert res["placement"] == "own session (pilead-topic-101010)"
     (create,) = _create(rec)
-    assert create[:4] == ["new-window", "-P", "-F", "#{pane_id}"] and "-a" not in create
+    assert create[:6] == ["new-session", "-d", "-s", "pilead-topic-101010", "-P", "-F"]
+    assert create[6] == "#{pane_id}"
     assert create[create.index("-n") + 1] == "[Exec] topic" and create[create.index("-c") + 1] == str(tmp_path / "wt")
+    assert not MOVERS & set(rec.verbs())
     assert (sdir / "iterm-id").read_text() == "tmux:%7"
     boot = (sdir / "bootstrap.sh").read_text()
     assert '_relay_sid="$TMUX_PANE"' in boot
     want_line = (f"cd {tmp_path / 'wt'} && echo $$ > {sdir / 'pid'} && "
                  + iterm.build_pi_cmd("/h/packet.md", **PI_ARGS))
     assert want_line in boot.splitlines()
-    # window named (automatic-rename off) and painted
+    # the session's window named (automatic-rename off) and painted
     assert ["rename-window", "-t", "%7", "--", "[Exec] topic"] in rec.calls
     assert ["set-option", "-w", "-t", "%7", "automatic-rename", "off"] in rec.calls
     assert ["set-option", "-w", "-t", "%7", "window-status-style", "bg=#010203"] in rec.calls
 
 
+@pytest.mark.parametrize("pidfile_dir,want", [
+    ("sessions/topic-101010", "pilead-topic-101010"),
+    ("sessions/we.ird:name 7", "pilead-we-ird-name-7"),      # '.' ':' ' ' are never in a tmux name
+])
+def test_session_name_is_tmux_safe(tmp_path, pidfile_dir, want):
+    name = tmux_backend._session_name(str(tmp_path / pidfile_dir / "pid"))
+    assert name == want and not set(".: ") & set(name)
+    assert tmux_backend._session_name(None) == "pilead-exec"
+
+
+def test_session_name_collision_gets_a_suffix(tmp_path, rec):
+    held = {"pilead-topic-101010", "pilead-topic-101010-2"}
+    rec.answers += [(lambda a: a[0] == "has-session" and a[-1][1:] in held, (0, "")),
+                    (lambda a: a[0] == "has-session", (1, "")), (NEW_SESSION, (0, "%7\n"))]
+    res, _ = _spawn(tmp_path)
+    assert res["tmux_session"] == "pilead-topic-101010-3"
+    (create,) = _create(rec)
+    assert create[create.index("-s") + 1] == "pilead-topic-101010-3"
+
+
 @pytest.mark.parametrize("type_name", [True, False])
 def test_spawn_types_only_the_launch_line(tmp_path, rec, type_name):
-    rec.answers.append((lambda a: a[0] == "new-window", (0, "%7\n")))
+    rec.answers += [NO_SESSION, (NEW_SESSION, (0, "%7\n"))]
     res, sdir = _spawn(tmp_path, type_name=type_name, rename_delay=0.5)
     assert res["ok"] is True
     literal = [c for c in rec.calls if c[0] == "send-keys" and "-l" in c]
@@ -168,43 +197,52 @@ def test_spawn_types_only_the_launch_line(tmp_path, rec, type_name):
     assert rec.calls[-1] == ["send-keys", "-t", "%7", "Enter"]
 
 
-def test_spawn_tab_next_to_the_lead(tmp_path, rec):
-    rec.answers += [(disp("#{window_id}", "%3"), (0, "@4\n")), (lambda a: a[0] == "new-window", (0, "%8\n"))]
+def test_spawn_tab_with_a_lead_is_still_its_own_session_and_moves_no_client(tmp_path, rec):
+    rec.answers += [NO_SESSION, (NEW_SESSION, (0, "%8\n"))]
     res, _ = _spawn(tmp_path, lead_handle="tmux:%3", layout="tab")
     (create,) = _create(rec)
-    assert create[:3] == ["new-window", "-a", "-t"] and create[3] == "@4"
-    assert res["placement"] == "adjacent"
+    assert create[:2] == ["new-session", "-d"] and "-t" not in create   # not made inside the lead's session
+    assert res["placement"] == "own session (pilead-topic-101010)"
+    assert not MOVERS & set(rec.verbs())
 
 
-def test_spawn_pane_splits_the_lead(tmp_path, rec):
-    rec.answers += [(lambda a: a[0] == "split-window", (0, "%9\n")), (disp("#{window_panes}", "%9"), (0, "2\n"))]
+def test_spawn_pane_splits_the_lead_detached(tmp_path, rec):
+    rec.answers += [(disp("#{pane_id}", "%3"), (0, "%3\n")), (lambda a: a[0] == "split-window", (0, "%9\n")),
+                    (disp("#{window_panes}", "%9"), (0, "2\n"))]
     res, _ = _spawn(tmp_path, lead_handle="tmux:%3", layout="pane", tab_color=(9, 9, 9))
     (create,) = _create(rec)
-    assert create[:4] == ["split-window", "-h", "-t", "%3"] and "-n" not in create
-    assert res["placement"] == "pane" and res["session_id"] == "tmux:%9"
+    assert create[:5] == ["split-window", "-h", "-d", "-t", "%3"] and "-n" not in create
+    assert res["placement"] == "pane" and res["session_id"] == "tmux:%9" and res["tmux_session"] is None
+    assert not MOVERS & set(rec.verbs())
     # a split shares the lead's window: never renamed, never painted
     assert "rename-window" not in rec.verbs()
     assert not any("window-status-style" in c for c in rec.calls)
 
 
-def test_spawn_lead_pane_not_found_falls_back_to_a_plain_window(tmp_path, rec):
-    rec.answers += [(disp("#{window_id}", "%3"), (1, "")), (lambda a: a[0] == "new-window", (0, "%5\n"))]
-    res, _ = _spawn(tmp_path, lead_handle="tmux:%3")
+def test_spawn_pane_without_a_findable_lead_gets_its_own_session_never_a_stray_window(tmp_path, rec):
+    rec.answers += [(disp("#{pane_id}", "%3"), (1, "")), NO_SESSION, (NEW_SESSION, (0, "%5\n"))]
+    res, _ = _spawn(tmp_path, lead_handle="tmux:%3", layout="pane")
     (create,) = _create(rec)
-    assert create[:2] == ["new-window", "-P"]
-    assert res["placement"] == "end-of-bar (lead pane not found)"
+    assert create[:2] == ["new-session", "-d"]
+    assert res["placement"] == "own session (pilead-topic-101010 — lead pane not found)"
+    res, _ = _spawn(tmp_path, layout="pane")
+    assert res["placement"] == "own session (pilead-topic-101010 — no lead tmux handle)"
+    assert "new-window" not in rec.verbs()
 
 
 def test_spawn_create_failure_is_script_failed(tmp_path, rec):
-    rec.answers.append((lambda a: a[0] == "new-window", (1, "")))
+    rec.answers.append((NEW_SESSION, (1, "")))
     res, sdir = _spawn(tmp_path)
-    assert res["ok"] is False and res["reason"] == "script-failed" and res["error"]
+    assert res["ok"] is False and res["reason"] == "script-failed" and res["error"] == "boom"
+    # NO fallback into some other session: the one create call failed, nothing else was tried
+    assert len(_create(rec)) == 1 and "new-window" not in rec.verbs() and "split-window" not in rec.verbs()
+    assert not MOVERS & set(rec.verbs())
     assert not (sdir / "iterm-id").exists()
     assert "send-keys" not in rec.verbs()
 
 
 def test_spawn_target_gone(tmp_path, rec):
-    rec.answers += [(lambda a: a[0] == "new-window", (0, "%7\n")), (lambda a: a[0] == "send-keys", (1, ""))]
+    rec.answers += [NO_SESSION, (NEW_SESSION, (0, "%7\n")), (lambda a: a[0] == "send-keys", (1, ""))]
     res, _ = _spawn(tmp_path)
     assert res["ok"] is False and res["reason"] == "target-gone" and res["session_id"] == "tmux:%7"
 
@@ -262,10 +300,30 @@ def test_notify_doubles_hash_and_flattens_newlines(rec):
     assert rec.calls == [["display-message", "-t", "%4", "-d", "4000", "--", "pi-lead ##1 — line second ##x"]]
 
 
-def test_close_by_id_kills_the_pane(rec):
+def _own(rec, pane, name, panes):
+    rec.answers += [(disp("#{session_name}", pane), (0, name + "\n")),
+                    (lambda a: a[0] == "list-panes" and pane in a, (0, "".join(p + "\n" for p in panes)))]
+
+
+def test_close_kills_the_executors_own_session(rec):
+    _own(rec, "%4", "pilead-topic-101010", ["%4"])
     assert tmux_backend.close_by_id("tmux:%4") is True
+    assert ["kill-session", "-t", "=pilead-topic-101010"] in rec.calls
+    assert "kill-pane" not in rec.verbs()
     assert tmux_backend.close("x", "tmux:%4") is True
-    assert rec.calls == [["kill-pane", "-t", "%4"]] * 2
+
+
+def test_close_of_a_split_pane_kills_only_the_pane(rec):
+    # a split lives in the lead's session (here even a pilead-named one, with two panes): pane only
+    _own(rec, "%4", "pilead-lead-1", ["%4", "%2"])
+    assert tmux_backend.close_by_id("tmux:%4") is True
+    assert "kill-session" not in rec.verbs() and ["kill-pane", "-t", "%4"] in rec.calls
+
+
+def test_close_never_kills_a_users_session(rec):
+    _own(rec, "%4", "work", ["%4"])    # not ours (no pilead- prefix), even as its sole pane
+    assert tmux_backend.close_by_id("tmux:%4") is True
+    assert "kill-session" not in rec.verbs() and ["kill-pane", "-t", "%4"] in rec.calls
 
 
 def test_exists_tty_title(rec):

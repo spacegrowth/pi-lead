@@ -1127,6 +1127,17 @@ def test_all_writes_nothing(tmp_path, capsys):
     assert after.keys() == before.keys()
 
 
+def test_json_carries_the_tmux_session_of_a_tmux_executor(tmp_path, capsys):
+    """Each executor row has `tmux_session`: its own session's name when it recorded one, else null."""
+    sdir = session(tmp_path, "s-own")
+    meta = json.loads((sdir / "meta.json").read_text())
+    (sdir / "meta.json").write_text(json.dumps({**meta, "backend": "tmux", "tab": "tmux:%4",
+                                                "tmux_session": "pilead-s-own"}))
+    session(tmp_path, "s-plain")
+    ex = {x["sid"]: x for x in json.loads(run(capsys, "--json"))["executors"]}
+    assert ex["s-own"]["tmux_session"] == "pilead-s-own" and ex["s-plain"]["tmux_session"] is None
+
+
 def test_term_column_says_tmux_for_a_tmux_lead(tmp_path, capsys):
     """b12: a lead inside tmux reads `tmux` — by its recorded backend or its `tmux:%N` handle — even when
     $TERM_PROGRAM (inherited from the outer terminal on a Mac) said iTerm.app."""
