@@ -1,6 +1,6 @@
 {
   "name": "pi-lead",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lead/executor pattern for pi on iTerm2 or tmux: a lead plans and reviews, executors work packets in their own tabs, stage (never commit), and report.",
   "license": "MIT",
   "repository": {
